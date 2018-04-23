@@ -1,0 +1,123 @@
+$unitSize: 1rem;
+$unitW: $unitSize;
+$unitH: $unitSize;
+$color: green;
+
+@keyframes foodAnimation {
+  0% {
+    opacity: .5;
+    -webkit-transform: scale(.8);
+    -moz-transform: scale(.8);
+    -ms-transform: scale(.8);
+    -o-transform: scale(.8);
+    transform: scale(.8);
+  }
+  50% {
+    opacity: 1;
+    -webkit-transform: scale(1);
+    -moz-transform: scale(1);
+    -ms-transform: scale(1);
+    -o-transform: scale(1);
+    transform: scale(1);
+  }
+  100% {
+    opacity: .5;
+    -webkit-transform: scale(.8);
+    -moz-transform: scale(.8);
+    -ms-transform: scale(.8);
+    -o-transform: scale(.8);
+    transform: scale(.8);
+  }
+}
+
+@keyframes bounceHorn {
+  0% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+  }
+  50% {
+    -webkit-transform: translateY(10%);
+    -moz-transform: translateY(10%);
+    -ms-transform: translateY(10%);
+    -o-transform: translateY(10%);
+    transform: translateY(10%);
+  }
+  100% {
+    -webkit-transform: translateY(0);
+    -moz-transform: translateY(0);
+    -ms-transform: translateY(0);
+    -o-transform: translateY(0);
+    transform: translateY(0);
+  }
+}
+
+#game {
+  .guide {
+    .label {
+      padding-left: .25rem;
+      padding-right: .25rem;
+    }
+
+    .button1 {
+      min-width: 2rem;
+      height: 2rem;
+      text-align: center;
+      border: 1px solid;
+    }
+  }
+
+  #yard {
+    position: relative;
+    border: 1px solid rgba(#333, .5);
+
+    .piece {
+      position: absolute;
+      width: $unitW;
+      height: $unitH;
+      -webkit-border-radius: .125rem;
+      -moz-border-radius: .125rem;
+      border-radius: .125rem;
+      background-color: $color;
+    }
+
+    .head {
+      z-index: 2;
+
+      .leftHorn, .rightHorn {
+        display: block;
+        position: absolute;
+        top: -10%;
+        height: 1.25rem;
+        z-index: 9;
+        border: .4rem solid darken($color, 15%);
+        border-bottom-color: transparent;
+        -webkit-animation: bounceHorn 500ms infinite;
+        -o-animation: bounceHorn 500ms infinite;
+        animation: bounceHorn 500ms infinite;
+        border-top-color: darken($color, 35%);
+      }
+
+      .leftHorn {
+        left: -5%;
+        border-left: 0;
+      }
+      .rightHorn {
+        right: -5%;
+        border-right: 0;
+      }
+    }
+
+    .food {
+      position: absolute;
+      width: $unitW;
+      height: $unitH;
+      background-color: $color;
+      -webkit-animation: foodAnimation 1000ms ease infinite;
+      -o-animation: foodAnimation 1000ms ease infinite;
+      animation: foodAnimation 1000ms ease infinite;
+    }
+  }
+}
