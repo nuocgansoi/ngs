@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
-import Game from './pages/Game';
+import Snake from './pages/Snake';
 import './scss/App.scss';
 
 class App extends Component {
@@ -9,10 +9,10 @@ class App extends Component {
       <Router>
         <div>
           <nav>
-            Logo
+            <strong>This is a Logo!</strong>
           </nav>
           <div>
-            <Route exact path="/" component={Game}/>
+            <Route exact path="/" component={Snake}/>
           </div>
         </div>
       </Router>

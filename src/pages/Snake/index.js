@@ -20,7 +20,7 @@ import {
 } from './constants';
 import Guide from './Guide';
 
-class Game extends React.Component {
+class Snake extends React.Component {
   static defaultProps = {
     width: 30,
     height: 20,
@@ -77,7 +77,7 @@ class Game extends React.Component {
     }
   }
 
-  game = {
+  snake = {
     pauseOrResume: () => {
       if (this.state.status === STATUS_LIVE) { //  Pause
         clearTimeout(this.timeout);
@@ -141,10 +141,10 @@ class Game extends React.Component {
 
     switch (keyCode) {
       case KEY_SPACE:
-        this.game.pauseOrResume();
+        this.snake.pauseOrResume();
         return;
       case KEY_R:
-        this.game.restart();
+        this.snake.restart();
         return;
       default:
         return;
@@ -292,7 +292,7 @@ class Game extends React.Component {
     const {pieces, yardStyle, status} = this.state;
 
     return (
-      <div id="game" className="container">
+      <div id="snake" className="container">
         <div className="row mb-3">
           <div className="col-md-2">
             <table>
@@ -322,10 +322,10 @@ class Game extends React.Component {
           </div>
         </div>
 
-        <Console game={this.game} status={status}/>
+        <Console snake={this.snake} status={status}/>
       </div>
     );
   }
 }
 
-export default Game;
+export default Snake;

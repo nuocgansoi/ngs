@@ -30,17 +30,17 @@ const RestartButton = ({handler}) => (
   </div>
 );
 
-const Console = ({game, status, ...props}) => {
+const Console = ({snake, status, ...props}) => {
   let StatusButton;
   switch (status) {
     case STATUS_LIVE:
     case STATUS_PAUSE:
-      StatusButton = <PauseOrResumeButton status={status} handler={game.pauseOrResume}/>;
+      StatusButton = <PauseOrResumeButton status={status} handler={snake.pauseOrResume}/>;
       break;
     case STATUS_OVER:
     case STATUS_WIN:
     default:
-      StatusButton = <RestartButton handler={game.restart}/>;
+      StatusButton = <RestartButton handler={snake.restart}/>;
       break;
   }
 
@@ -48,18 +48,18 @@ const Console = ({game, status, ...props}) => {
     <div className="console d-flex d-md-none justify-content-between align-items-center mt-3 mb-5">
       <div className="controller">
         <div>
-          <ControlButton handler={game.up}>
+          <ControlButton handler={snake.up}>
             <i className="fa fa-arrow-up"/>
           </ControlButton>
         </div>
         <div className="d-flex">
-          <ControlButton handler={game.left}>
+          <ControlButton handler={snake.left}>
             <i className="fa fa-arrow-left"/>
           </ControlButton>
-          <ControlButton handler={game.down}>
+          <ControlButton handler={snake.down}>
             <i className="fa fa-arrow-down"/>
           </ControlButton>
-          <ControlButton handler={game.right}>
+          <ControlButton handler={snake.right}>
             <i className="fa fa-arrow-right"/>
           </ControlButton>
         </div>
