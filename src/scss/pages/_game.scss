@@ -2,6 +2,7 @@ $unitSize: 1rem;
 $unitW: $unitSize;
 $unitH: $unitSize;
 $color: green;
+$buttonSize: 3rem;
 
 @keyframes foodAnimation {
   0% {
@@ -66,6 +67,33 @@ $color: green;
       height: 2rem;
       text-align: center;
       border: 1px solid;
+    }
+  }
+
+  .console {
+    .controller {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .button1 {
+      width: $buttonSize;
+      height: $buttonSize;
+      border: 1px solid;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      border-bottom: .35rem solid rgba($black, .5);
+      -webkit-border-radius: 3px;
+      -moz-border-radius: 3px;
+      border-radius: 3px;
+
+      &:active {
+        background-color: rgba($black, .2);
+        border-bottom: 1px solid;
+      }
     }
   }
 

@@ -1,24 +1,24 @@
 import React from 'react';
+import Console from './Console';
+import {
+  BASE_SPEED,
+  KEY_A,
+  KEY_D,
+  KEY_R,
+  KEY_S,
+  KEY_SPACE,
+  KEY_W,
+  MAX_SPEED,
+  REDIRECT_LIST,
+  REM,
+  STATUS_LIVE,
+  STATUS_OVER,
+  STATUS_PAUSE,
+  STATUS_WIN,
+  UNIT_H,
+  UNIT_W,
+} from './constants';
 import Guide from './Guide';
-
-const UNIT_W = 1;
-const UNIT_H = 1;
-const REM = 16;
-
-const KEY_W = 87;
-const KEY_S = 83;
-const KEY_A = 65;
-const KEY_D = 68;
-const REDIRECT_LIST = [KEY_W, KEY_S, KEY_A, KEY_D];
-
-const KEY_SPACE = 32;
-
-const STATUS_LIVE = 1;
-const STATUS_OVER = 2;
-const STATUS_WIN = 3;
-
-const BASE_SPEED = 500;
-const MAX_SPEED = 100;
 
 class Game extends React.Component {
   static defaultProps = {
@@ -37,29 +37,28 @@ class Game extends React.Component {
     this.maxPoint = props.width * props.height;
     this.speed = props.speed;
 
+    const pieces = [
+      {x: 4, y: 0},
+      {x: 3, y: 0},
+      {x: 2, y: 0},
+      {x: 1, y: 0},
+      {x: 0, y: 0},
+    ];
     this.state = {
       yardStyle: {
         width: this.yard.width * UNIT_W + 'rem',
         height: this.yard.height * UNIT_H + 'rem',
       },
       direction: {x: 1, y: 0},
-      pieces: [
-        {x: 4, y: 0},
-        {x: 3, y: 0},
-        {x: 2, y: 0},
-        {x: 1, y: 0},
-        {x: 0, y: 0},
-      ],
-      status: STATUS_LIVE,
-      food: null,
+      pieces,
+      status: STATUS_PAUSE,
+      food: this.randomFood(pieces),
     };
-
+    this.initialState = {...this.state};
   }
 
   componentDidMount() {
-    this.randomFood(this.state.pieces);
     document.addEventListener('keydown', this.onKeyDown, false);
-
 
     const wrapperWidth = this.refs.yardWrapper.offsetWidth;
     const realYardW = this.yard.width * UNIT_W * REM;
@@ -72,9 +71,40 @@ class Game extends React.Component {
           ...this.state.yardStyle,
           transform: `scale(${scale}) translate(${translate}%, ${translate}%)`,
         },
+      }, () => {
+        this.initialState = {...this.state};
       });
     }
   }
+
+  game = {
+    pauseOrResume: () => {
+      if (this.state.status === STATUS_LIVE) { //  Pause
+        clearTimeout(this.timeout);
+        this.timeout = null;
+        this.setState({status: STATUS_PAUSE});
+      } else {  //  Resume
+        this.timeout = setTimeout(this.run, this.speed);
+        this.setState({status: STATUS_LIVE});
+      }
+    },
+    restart: () => {
+      this.setState({...this.initialState});
+      this.speed = this.props.speed;
+    },
+    up: () => {
+      this.redirect(KEY_W);
+    },
+    down: () => {
+      this.redirect(KEY_S);
+    },
+    left: () => {
+      this.redirect(KEY_A);
+    },
+    right: () => {
+      this.redirect(KEY_D);
+    },
+  };
 
   randomFood = (pieces) => {
     const x = Math.floor(Math.random() * (this.yard.width));
@@ -94,32 +124,36 @@ class Game extends React.Component {
       }
     }
 
-    return this.setState({food: {x, y}});
+    return {x, y};
   };
 
   onKeyDown = (e) => {
+    const {status} = this.state;
+    if (status === STATUS_WIN || status === STATUS_OVER) return;
+
     const {keyCode} = e;
     //console.log(keyCode);
 
     if (REDIRECT_LIST.includes(keyCode)) {
       this.redirect(keyCode);
+      return null;
     }
 
-    if (keyCode === KEY_SPACE) {
-      this.togglePause();
-    }
-  };
-
-  togglePause = () => {
-    if (this.timeout) {
-      clearTimeout(this.timeout);
-      this.timeout = null;
-    } else {
-      this.timeout = setTimeout(this.run, this.speed);
+    switch (keyCode) {
+      case KEY_SPACE:
+        this.game.pauseOrResume();
+        return;
+      case KEY_R:
+        this.game.restart();
+        return;
+      default:
+        return;
     }
   };
 
   redirect = (keyCode) => {
+    if (!this.timeout) return;
+
     const {direction} = this.state;
 
     let list = [
@@ -179,7 +213,7 @@ class Game extends React.Component {
         this.upSpeed();
       }
     } else {
-      pieces.pop();
+      pieces = pieces.slice(0, -1);
     }
 
     this.checkDie(pieces, head);
@@ -191,10 +225,10 @@ class Game extends React.Component {
     ];
 
     if (eatFood) {
-      this.randomFood(pieces);
+      food = this.randomFood(pieces);
     }
 
-    this.setState({pieces}, () => {
+    this.setState({pieces, food}, () => {
       this.timeout = setTimeout(this.run, this.speed);
     });
   };
@@ -255,12 +289,12 @@ class Game extends React.Component {
   };
 
   render() {
-    const {pieces, yardStyle} = this.state;
+    const {pieces, yardStyle, status} = this.state;
 
     return (
       <div id="game" className="container">
-        <div className="d-flex mb-3">
-          <div className="col-2">
+        <div className="row mb-3">
+          <div className="col-md-2">
             <table>
               <tbody>
               <tr>
@@ -275,7 +309,7 @@ class Game extends React.Component {
             </table>
           </div>
 
-          <Guide className="guide col"/>
+          <Guide className="guide col d-none d-md-block"/>
         </div>
 
         <div ref="yardWrapper">
@@ -287,6 +321,8 @@ class Game extends React.Component {
             {this.renderFood()}
           </div>
         </div>
+
+        <Console game={this.game} status={status}/>
       </div>
     );
   }
