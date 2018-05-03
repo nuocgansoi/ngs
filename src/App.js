@@ -1,26 +1,23 @@
 import React, {Component} from 'react';
-import {BrowserRouter as Router, Redirect, Route} from 'react-router-dom';
-import {LogoSVG} from './components';
-import Snake from './pages/Snake';
+import {BrowserRouter as Router, Redirect, Route, Switch} from 'react-router-dom';
+import {loadable, Navbar} from './components';
+import {Home, Snake} from './pages';
 import './scss/App.scss';
-
-const routes = {
-  home: '/',
-};
+import routes from './routes';
 
 class App extends Component {
   render() {
     return (
       <Router>
         <div id="rootWrapper">
-          <nav id="navbar">
-            <div className="body container">
-              <LogoSVG/>
-            </div>
-          </nav>
+          <Navbar/>
           <div id="main">
-            <Route exact path={routes.home} component={Snake}/>
-            <Redirect to={routes.home}/>
+            <Switch>
+              <Route exact path={routes.home} component={loadable(Home)}/>
+              <Route exact path={routes.snake} component={loadable(Snake)}/>
+
+              <Redirect to={routes.home}/>
+            </Switch>
           </div>
         </div>
       </Router>

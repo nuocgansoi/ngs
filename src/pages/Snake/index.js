@@ -20,7 +20,7 @@ import {
 } from './constants';
 import Guide from './Guide';
 
-class Snake extends React.Component {
+export default class extends React.Component {
   static defaultProps = {
     width: 30,
     height: 20,
@@ -327,5 +327,3 @@ class Snake extends React.Component {
     );
   }
 }
-
-export default Snake;
