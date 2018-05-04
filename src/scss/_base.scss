@@ -63,3 +63,13 @@
     }
   }
 }
+
+@for $i from 1 through 24 {
+  [data-fa-rotate='#{$i * 15}'] {
+    -webkit-transform: rotate(#{$i * 15}deg);
+    -moz-transform: rotate(#{$i * 15}deg);
+    -ms-transform: rotate(#{$i * 15}deg);
+    -o-transform: rotate(#{$i * 15}deg);
+    transform: rotate(#{$i * 15}deg);
+  }
+}

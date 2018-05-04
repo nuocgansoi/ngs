@@ -1,6 +1,6 @@
-$unitSize: 1rem;
-$unitW: $unitSize;
-$unitH: $unitSize;
+$pointSize: 1rem;
+$pointW: $pointSize;
+$pointH: $pointSize;
 $color: green;
 $buttonSize: 3rem;
 
@@ -71,29 +71,47 @@ $buttonSize: 3rem;
   }
 
   .console {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 99;
+    padding: 2rem 1rem;
+
     .controller {
       display: inline-flex;
       flex-direction: column;
       align-items: center;
+      @include transform(rotate(-45deg) translate(15%, 15%));
     }
 
-    .button1 {
+    .button1, .button2 {
+      margin: .125rem;
       width: $buttonSize;
       height: $buttonSize;
-      border: 1px solid;
+      border: 1px solid rgba($black, .3);
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
-      border-bottom: .35rem solid rgba($black, .5);
+      border-bottom: .2rem solid rgba($black, .3);
       -webkit-border-radius: 3px;
       -moz-border-radius: 3px;
       border-radius: 3px;
 
       &:active {
         background-color: rgba($black, .2);
-        border-bottom: 1px solid;
+        border-left-width: 1px;
+        border-bottom-width: 1px;
       }
+    }
+
+    .button1 {
+      border-left: .2rem solid rgba($black, .3);
+    }
+
+    .button2 {
+      border-left: 1px solid rgba($black, .3);
     }
   }
 
@@ -103,8 +121,8 @@ $buttonSize: 3rem;
 
     .piece {
       position: absolute;
-      width: $unitW;
-      height: $unitH;
+      width: $pointW;
+      height: $pointH;
       -webkit-border-radius: .125rem;
       -moz-border-radius: .125rem;
       border-radius: .125rem;
@@ -117,8 +135,8 @@ $buttonSize: 3rem;
       .leftHorn, .rightHorn {
         display: block;
         position: absolute;
-        top: -10%;
-        height: 1.25rem;
+        top: -15%;
+        height: 130%;
         z-index: 9;
         border: .4rem solid darken($color, 15%);
         border-bottom-color: transparent;
@@ -140,8 +158,8 @@ $buttonSize: 3rem;
 
     .food {
       position: absolute;
-      width: $unitW;
-      height: $unitH;
+      width: $pointW;
+      height: $pointH;
       background-color: $color;
       -webkit-animation: foodAnimation 1000ms ease infinite;
       -o-animation: foodAnimation 1000ms ease infinite;

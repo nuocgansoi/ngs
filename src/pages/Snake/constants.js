@@ -1,5 +1,5 @@
-export const UNIT_W = 1;
-export const UNIT_H = 1;
+export const POINT_W = 1;
+export const POINT_H = 1;
 export const REM = 16;
 
 export const BASE_SPEED = 500;
@@ -18,3 +18,5 @@ export const REDIRECT_LIST = [KEY_W, KEY_S, KEY_A, KEY_D];
 
 export const KEY_SPACE = 32;
 export const KEY_R = 82;
+
+export const KEYS = [KEY_W, KEY_S, KEY_A, KEY_D, KEY_SPACE, KEY_R];

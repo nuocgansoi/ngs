@@ -8,15 +8,16 @@ import {
   KEY_S,
   KEY_SPACE,
   KEY_W,
+  KEYS,
   MAX_SPEED,
+  POINT_H,
+  POINT_W,
   REDIRECT_LIST,
   REM,
   STATUS_LIVE,
   STATUS_OVER,
   STATUS_PAUSE,
   STATUS_WIN,
-  UNIT_H,
-  UNIT_W,
 } from './constants';
 import Guide from './Guide';
 
@@ -46,8 +47,8 @@ export default class extends React.Component {
     ];
     this.state = {
       yardStyle: {
-        width: this.yard.width * UNIT_W + 'rem',
-        height: this.yard.height * UNIT_H + 'rem',
+        width: this.yard.width * POINT_W + 'rem',
+        height: this.yard.height * POINT_H + 'rem',
       },
       direction: {x: 1, y: 0},
       pieces,
@@ -60,11 +61,13 @@ export default class extends React.Component {
   componentDidMount() {
     document.addEventListener('keydown', this.onKeyDown, false);
 
-    const wrapperWidth = this.refs.yardWrapper.offsetWidth;
-    const realYardW = this.yard.width * UNIT_W * REM;
+    const wrapper = this.refs.yardWrapper;
+    const wrapperWidth = wrapper.offsetWidth;
+    const realYardW = this.yard.width * POINT_W * REM;
 
     if (realYardW > wrapperWidth) {
       const scale = wrapperWidth / realYardW;
+      wrapper.style.height = wrapper.offsetHeight * scale + 'px';
       const translate = -((1 - scale) / 2 / scale) * 100;
       this.setState({
         yardStyle: {
@@ -133,6 +136,8 @@ export default class extends React.Component {
 
     const {keyCode} = e;
     //console.log(keyCode);
+
+    if (KEYS.includes(keyCode)) e.preventDefault();
 
     if (REDIRECT_LIST.includes(keyCode)) {
       this.redirect(keyCode);
@@ -258,8 +263,8 @@ export default class extends React.Component {
         style={{
           opacity,
           transform,
-          top: item.y * UNIT_H + 'rem',
-          left: item.x * UNIT_W + 'rem',
+          top: item.y * POINT_H + 'rem',
+          left: item.x * POINT_W + 'rem',
         }}>
         {
           isHead && (
@@ -282,8 +287,8 @@ export default class extends React.Component {
 
     return food && (
       <div className="food" style={{
-        top: food.y * UNIT_H + 'rem',
-        left: food.x * UNIT_W + 'rem',
+        top: food.y * POINT_H + 'rem',
+        left: food.x * POINT_W + 'rem',
       }}/>
     );
   };
@@ -293,23 +298,9 @@ export default class extends React.Component {
 
     return (
       <div id="snake" className="container">
-        <div className="row mb-3">
-          <div className="col-md-2">
-            <table>
-              <tbody>
-              <tr>
-                <td>point:</td>
-                <td>{pieces.length}</td>
-              </tr>
-              <tr>
-                <td>speed:</td>
-                <td>{Math.round(10 * 1000 / this.speed) / 10}</td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
-
-          <Guide className="guide col d-none d-md-block"/>
+        <div className="d-flex justify-content-between mb-3">
+          <div>speed: {Math.round(10 * 1000 / this.speed) / 10}</div>
+          <div>point: {pieces.length}</div>
         </div>
 
         <div ref="yardWrapper">
@@ -322,6 +313,7 @@ export default class extends React.Component {
           </div>
         </div>
 
+        <Guide className="guide d-none d-md-block py-3"/>
         <Console snake={this.snake} status={status}/>
       </div>
     );
