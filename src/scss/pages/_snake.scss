@@ -1,9 +1,3 @@
-$pointSize: 1rem;
-$pointW: $pointSize;
-$pointH: $pointSize;
-$color: green;
-$buttonSize: 3rem;
-
 @keyframes foodAnimation {
   0% {
     opacity: .5;
@@ -70,52 +64,12 @@ $buttonSize: 3rem;
     }
   }
 
-  .console {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 99;
-    padding: 2rem 1rem;
-
-    .controller {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: center;
-      @include transform(rotate(-45deg) translate(15%, 15%));
-    }
-
-    .button1, .button2 {
-      margin: .125rem;
-      width: $buttonSize;
-      height: $buttonSize;
-      border: 1px solid rgba($black, .3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      border-bottom: .2rem solid rgba($black, .3);
-      -webkit-border-radius: 3px;
-      -moz-border-radius: 3px;
-      border-radius: 3px;
-
-      &:active {
-        background-color: rgba($black, .2);
-        border-left-width: 1px;
-        border-bottom-width: 1px;
-      }
-    }
-
-    .button1 {
-      border-left: .2rem solid rgba($black, .3);
-    }
-
-    .button2 {
-      border-left: 1px solid rgba($black, .3);
-    }
-  }
-
   #yard {
+    $pointSize: 1rem;
+    $pointW: $pointSize;
+    $pointH: $pointSize;
+    $color: green;
+
     position: relative;
     border: 1px solid rgba(#333, .5);
 

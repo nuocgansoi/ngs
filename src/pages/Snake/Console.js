@@ -1,22 +1,6 @@
 import React from 'react';
+import {Controller} from '../../components/Console';
 import {STATUS_LIVE, STATUS_OVER, STATUS_PAUSE, STATUS_WIN} from './constants';
-
-let interval;
-
-const onTouchStart = (handler) => () => {
-  handler();
-  interval = setInterval(handler, 100);
-};
-
-const onTouchEnd = () => {
-  clearInterval(interval);
-};
-
-const ControlButton = ({handler, ...props}) => (
-  <div className="button1" onTouchStart={onTouchStart(handler)} onTouchEnd={onTouchEnd}>
-    {props.children}
-  </div>
-);
 
 const PauseOrResumeButton = ({status, handler}) => (
   <div className="button2" onClick={handler}>
@@ -46,29 +30,10 @@ const Console = ({snake, status, ...props}) => {
 
   return (
     <div className="console d-flex d-md-none justify-content-between align-items-center">
-      <div className="controller">
-        <div className="d-flex">
-          <ControlButton handler={snake.left}>
-            <i className="fa fa-arrow-left" data-fa-rotate="45"/>
-          </ControlButton>
-          <ControlButton handler={snake.up}>
-            <i className="fa fa-arrow-up" data-fa-rotate="45"/>
-          </ControlButton>
-        </div>
-        <div className="d-flex">
-          <ControlButton handler={snake.down}>
-            <i className="fa fa-arrow-down" data-fa-rotate="45"/>
-          </ControlButton>
-          <ControlButton handler={snake.right}>
-            <i className="fa fa-arrow-right" data-fa-rotate="45"/>
-          </ControlButton>
-        </div>
-      </div>
+      <Controller controls={snake}/>
 
-      <div className="settings">
-        <div>
-          {StatusButton}
-        </div>
+      <div className="actions">
+        {StatusButton}
       </div>
     </div>
   );

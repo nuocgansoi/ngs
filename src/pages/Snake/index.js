@@ -23,8 +23,8 @@ import Guide from './Guide';
 
 export default class extends React.Component {
   static defaultProps = {
-    width: 30,
-    height: 20,
+    height: 12 * 3 / 2,
+    width: 12 * 4 / 2,
     speed: BASE_SPEED,
   };
 
@@ -39,8 +39,6 @@ export default class extends React.Component {
     this.speed = props.speed;
 
     const pieces = [
-      {x: 4, y: 0},
-      {x: 3, y: 0},
       {x: 2, y: 0},
       {x: 1, y: 0},
       {x: 0, y: 0},
