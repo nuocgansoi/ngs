@@ -1,4 +1,5 @@
 import React from 'react';
+import storage from '../../storage';
 import Console from './Console';
 import {
   BASE_SPEED,
@@ -53,7 +54,8 @@ export default class extends React.Component {
       status: STATUS_PAUSE,
       food: this.randomFood(pieces),
     };
-    this.initialState = {...this.state};
+
+    this.highScore = storage.snake.getHighScore() || 0;
   }
 
   componentDidMount() {
@@ -72,8 +74,6 @@ export default class extends React.Component {
           ...this.state.yardStyle,
           transform: `scale(${scale}) translate(${translate}%, ${translate}%)`,
         },
-      }, () => {
-        this.initialState = {...this.state};
       });
     }
   }
@@ -90,8 +90,7 @@ export default class extends React.Component {
       }
     },
     restart: () => {
-      this.setState({...this.initialState});
-      this.speed = this.props.speed;
+      window.location.reload();
     },
     up: () => {
       this.redirect(KEY_W);
@@ -239,11 +238,29 @@ export default class extends React.Component {
   checkDie = (pieces, head) => {
     pieces.forEach(item => {
       if (item.x === head.x && item.y === head.y) {
+        this.updateHighScore(pieces.length + 1);
+        this.setState({status: STATUS_OVER});
         alert('GAME OVER!!!');
 
-        return this.setState({status: STATUS_OVER});
+        return null;
       }
     });
+  };
+
+  updateHighScore = (score) => {
+    if (score > this.highScore) storage.snake.setHighScore(score);
+  };
+
+  getDisplayPoint = (point) => {
+    const need = 3;
+    point = `${point}`;
+    const length = point.length;
+    const miss = need - length;
+    for (let i = 0; i < miss; i++) {
+      point = `0${point}`;
+    }
+
+    return point;
   };
 
   renderPiece = (item, index) => {
@@ -296,9 +313,18 @@ export default class extends React.Component {
 
     return (
       <div id="snake" className="container">
-        <div className="d-flex justify-content-between mb-3">
-          <div>speed: {Math.round(10 * 1000 / this.speed) / 10}</div>
-          <div>point: {pieces.length}</div>
+        <div className="d-flex justify-content-end">
+          <div>
+            High Score: <span className="font-number">{this.getDisplayPoint(this.highScore)}</span>
+          </div>
+        </div>
+        <div className="d-flex justify-content-between mb-1">
+          <div>
+            speed: <span className="font-number">{Math.round(10 * 1000 / this.speed) / 10}</span>
+          </div>
+          <div>
+            point: <span className="font-number">{this.getDisplayPoint(pieces.length)}</span>
+          </div>
         </div>
 
         <div ref="yardWrapper">

@@ -73,3 +73,8 @@
     transform: rotate(#{$i * 15}deg);
   }
 }
+
+.font-number {
+  font-family: $font-share-tech-mono;
+  font-size: 1.25rem;
+}
