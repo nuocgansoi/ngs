@@ -2,15 +2,27 @@ import React from 'react';
 import {Link} from 'react-router-dom';
 import routes from '../../routes';
 
+const Item = ({to, children, props}) => (
+  <div className="item" {...props}>
+    <Link to={to} className="link">
+      {children}
+    </Link>
+  </div>
+);
+
 export default class extends React.Component {
   render() {
     return (
       <div id="home">
         <div className="container">
           <div className="gameList">
-            <Link to={routes.snake} className="link">
+            <Item to={routes.snake}>
               Snake
-            </Link>
+            </Item>
+
+            <Item to={routes.tetris}>
+              Tetris
+            </Item>
           </div>
         </div>
       </div>

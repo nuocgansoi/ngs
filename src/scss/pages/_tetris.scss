@@ -1,0 +1,108 @@
+#tetris {
+  $pointSize: .75rem;
+
+  .point {
+    position: absolute;
+    width: $pointSize;
+    height: $pointSize;
+    border: 1px solid rgba(0, 0, 0, .5);
+  }
+
+  @for $i from 0 through 4 {
+    [data-position-x='#{$i}'] {
+      left: $i * $pointSize;
+    }
+
+    [data-position-y='#{$i}'] {
+      top: $i * $pointSize;
+    }
+  }
+
+  .block {
+    position: relative;
+  }
+
+  .allBlocks {
+    .block {
+      margin: .125rem;
+    }
+  }
+
+  .bt {
+    width: 3 * $pointSize;
+    height: 3 * $pointSize;
+  }
+
+  .bi {
+    width: 4 * $pointSize;
+    height: 4 * $pointSize;
+  }
+
+  .bs {
+    width: 3 * $pointSize;
+    height: 3 * $pointSize;
+  }
+
+  .bz {
+    width: 3 * $pointSize;
+    height: 3 * $pointSize;
+  }
+
+  .bl {
+    width: 3 * $pointSize;
+    height: 3 * $pointSize;
+  }
+
+  .bj {
+    width: 3 * $pointSize;
+    height: 3 * $pointSize;
+  }
+
+  .bo {
+    width: 2 * $pointSize;
+    height: 2 * $pointSize;
+  }
+
+  //  Colors
+  [data-color="red"] {
+    .point {
+      background-color: $red;
+    }
+  }
+
+  [data-color="orange"] {
+    .point {
+      background-color: $orange;
+    }
+  }
+
+  [data-color="yellow"] {
+    .point {
+      background-color: $yellow;
+    }
+  }
+
+  [data-color="green"] {
+    .point {
+      background-color: $green;
+    }
+  }
+
+  [data-color="blue"] {
+    .point {
+      background-color: $blue;
+    }
+  }
+
+  [data-color="indigo"] {
+    .point {
+      background-color: $indigo;
+    }
+  }
+
+  [data-color="purple"] {
+    .point {
+      background-color: $purple;
+    }
+  }
+}
