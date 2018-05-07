@@ -1,5 +1,5 @@
 #tetris {
-  $pointSize: .75rem;
+  $pointSize: 10px;
 
   .point {
     position: absolute;
@@ -14,16 +14,13 @@
     }
 
     [data-position-y='#{$i}'] {
-      top: $i * $pointSize;
+      bottom: $i * $pointSize;
     }
-  }
-
-  .block {
-    position: relative;
   }
 
   .allBlocks {
     .block {
+      position: relative;
       margin: .125rem;
     }
   }
@@ -103,6 +100,17 @@
   [data-color="purple"] {
     .point {
       background-color: $purple;
+    }
+  }
+
+  //  Yard
+  .yard {
+    margin: 0 auto;
+    position: relative;
+    border: 1px solid rgba($black, .2);
+
+    .block {
+      position: absolute;
     }
   }
 }
