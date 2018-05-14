@@ -61,47 +61,12 @@
   }
 
   //  Colors
-  [data-color="red"] {
-    .point {
-      background-color: $red;
+  $colors: (red, orange, yellow, green, blue, indigo, purple);
+  @each $color in $colors {
+    [data-color="#{$color}"] {
+      background-color: $color;
     }
-  }
-
-  [data-color="orange"] {
-    .point {
-      background-color: $orange;
-    }
-  }
-
-  [data-color="yellow"] {
-    .point {
-      background-color: $yellow;
-    }
-  }
-
-  [data-color="green"] {
-    .point {
-      background-color: $green;
-    }
-  }
-
-  [data-color="blue"] {
-    .point {
-      background-color: $blue;
-    }
-  }
-
-  [data-color="indigo"] {
-    .point {
-      background-color: $indigo;
-    }
-  }
-
-  [data-color="purple"] {
-    .point {
-      background-color: $purple;
-    }
-  }
+  };
 
   //  Yard
   .yard {

@@ -1,6 +1,7 @@
 import React from 'react';
 import {Controller} from '../../components/Console';
 import {BI, BJ, BL, BO, BS, BT, BZ} from './blocks';
+import Point from './blocks/Point';
 import {
   COLOR_1,
   COLOR_2,
@@ -9,17 +10,20 @@ import {
   COLOR_5,
   COLOR_6,
   COLOR_7,
+  KEY_A,
+  KEY_D,
   KEY_P,
   KEY_R,
+  KEY_S,
   KEY_SPACE,
+  KEY_W,
   KEYS,
   POINT_SIZE,
-  REDIRECT_LIST,
   STATUS_OVER,
   STATUS_PAUSE,
   STATUS_RUN,
   TYPE_1,
-  TYPE_2,
+  TYPE_4,
 } from './constants';
 
 const blockList = [BT, BI, BS, BZ, BL, BJ, BO];
@@ -28,25 +32,38 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
 
+    const points = [];
+
+    //  TODO:: remove after test
+    for (let i = 0; i < 10 - 1; i++) {
+      points.push({x: i, y: 0, color: 'green'});
+      points.push({x: i, y: 1, color: 'red'});
+    }
+    points.push({x: 2, y: 2, color: 'red'});
+    points.push({x: 3, y: 2, color: 'red'});
+    points.push({x: 3, y: 3, color: 'red'});
+
     this.state = {
-      width: 20,
+      width: 10,
       height: 20,
       yardTransform: '',
       status: STATUS_RUN,
-      blocks: [
-        {Component: BL, type: TYPE_1, x: 0, y: 0},
-        {Component: BS, type: TYPE_2, x: 1, y: 0},
-      ],
-      currentBlock: {Component: BT, type: TYPE_1, x: 6, y: 10},
+      score: 0,
+      points,
+      currentBlock: {Component: BI, type: TYPE_1, x: 6, y: 10},
     };
 
-    this.duration = 100;
+    this.duration = 500;
   }
 
   componentDidMount() {
     document.addEventListener('keydown', this.onKeyDown, false);
     this.resizeYard();
     this.run();
+  }
+
+  componentWillUnmount() {
+    this.clearTimeout();
   }
 
   resizeYard = () => {
@@ -66,27 +83,48 @@ export default class extends React.Component {
 
   controls = {
     up: () => {
-      console.log('up');
+      const {currentBlock, points} = this.state;
+      let type = currentBlock.type + 1;
+      type = type > TYPE_4 ? TYPE_1 : type;
+
+      const wantBlock = {...currentBlock, type};
+      const relativePoints = this.getRelativePoints(wantBlock);
+
+      let toLeft = 0;
+      let toRight = 0;
+      relativePoints.forEach(point => {
+        if (point.x > this.state.width - 1) {
+          toLeft += 1;
+        } else if (point.x < 0) {
+          toRight += 1;
+        }
+      });
+      wantBlock.x += -toLeft + toRight;
+
+      if (this.shouldStop(wantBlock, points)) return null;
+
+      this.setState({currentBlock: wantBlock});
     },
     left: () => {
-      const {currentBlock} = this.state;
-      const x = currentBlock.x - 1;
-      if (x < 0) {
-        return null;
-      }
+      const {currentBlock, points} = this.state;
+      const wantBlock = {...currentBlock, x: currentBlock.x - 1};
+      if (this.shouldStop(wantBlock, points)) return null;
 
-      this.clearTimeout();
-
-      this.setState({});
-      console.log('left');
+      this.setState({currentBlock: wantBlock});
     },
     right: () => {
-      console.log('right');
+      const {currentBlock, points} = this.state;
+      const wantBlock = {...currentBlock, x: currentBlock.x + 1};
+      if (this.shouldStop(wantBlock, points)) return null;
 
+      this.setState({currentBlock: wantBlock});
     },
     down: () => {
-      console.log('down');
+      const {currentBlock, points} = this.state;
+      const wantBlock = {...currentBlock, y: currentBlock.y - 1};
+      if (this.shouldStop(wantBlock, points)) return null;
 
+      this.setState({currentBlock: wantBlock});
     },
     pauseOrResume: () => {
       if (this.state.status === STATUS_PAUSE) {
@@ -114,16 +152,20 @@ export default class extends React.Component {
     if (status === STATUS_OVER) return;
 
     const {keyCode} = e;
-    //console.log(keyCode);
 
     if (KEYS.includes(keyCode)) e.preventDefault();
 
-    if (REDIRECT_LIST.includes(keyCode)) {
-      //this.redirect(keyCode);
-      return null;
-    }
+    if (status === STATUS_PAUSE && keyCode !== KEY_SPACE) return;
 
     switch (keyCode) {
+      case KEY_W:
+        return this.controls.up();
+      case KEY_A:
+        return this.controls.left();
+      case KEY_S:
+        return this.controls.down();
+      case KEY_D:
+        return this.controls.right();
       case KEY_SPACE:
         this.controls.pauseOrResume();
         return;
@@ -139,10 +181,10 @@ export default class extends React.Component {
   };
 
   run = () => {
-    let {currentBlock, blocks} = this.state;
+    let {currentBlock, points, score} = this.state;
     const wantBlock = {...currentBlock, y: currentBlock.y - 1};
     const state = {};
-    const stop = this.shouldStop(wantBlock, blocks);
+    const stop = this.shouldStop(wantBlock, points);
 
     if (!stop) {  //  Run normal
       state.currentBlock = wantBlock;
@@ -153,10 +195,9 @@ export default class extends React.Component {
       currentRelativePoints.every(point => {
         if (point.y > this.state.height - 1) {
           gameOver = true;
-          return false;
         }
 
-        return true;
+        return !gameOver;
       });
 
       if (gameOver) {
@@ -166,11 +207,15 @@ export default class extends React.Component {
         return false;
       }
 
-      state.blocks = [
-        ...blocks,
-        currentBlock,
-      ];
+      const checkAddScore = this.checkAddScore([
+        ...points,
+        ...this.getRelativePoints(currentBlock),
+      ]);
+      state.points = checkAddScore.points;
       state.currentBlock = this.newBlock();
+      if (checkAddScore.addScore) {
+        state.score = score + checkAddScore.addScore;
+      }
     }
 
     this.setState(state, this.setTimeout);
@@ -178,27 +223,59 @@ export default class extends React.Component {
     return true;
   };
 
-  shouldStop = (currentBlock, blocks) => {
-    //  Check accident with border of screen
-    if (currentBlock.y < 0 || currentBlock.x < 0 || currentBlock.x > this.state.width - 1) return true;
+  checkAddScore = (points) => {
+    //  Remove row when eat
+    const rows = {};
+    points.forEach(point => {
+      rows[point.y] = rows[point.y] || [];
+      rows[point.y] = [...rows[point.y], point];
+    });
 
-    //  Check accident with other blocks
-    let stop = false;
-    const currentRelativePointsString = JSON.stringify(this.getRelativePoints(currentBlock));
-    blocks.every(block => {
-      const absolutePoints = block.Component.types[block.type];
-      absolutePoints.every(point => {
-        const relativePointString = JSON.stringify({
-          x: block.x + point.x,
-          y: block.y + point.y,
+    let addScore = 0;
+
+    //  From top to bottom to keep row
+    Object.keys(rows).reverse().map(rowIndex => {
+      if (rows[rowIndex].length === this.state.width) {
+        addScore++;
+
+        //  Remove point if it in removed row
+        const rowString = JSON.stringify(rows[rowIndex]);
+        points = points.filter(point => !rowString.includes(JSON.stringify(point)));
+
+        // Pull down if point is above of removed row
+        points = points.map(point => {
+          if (point.y > rowIndex) {
+            point.y -= 1;
+          }
+
+          return point;
         });
+      }
 
-        if (currentRelativePointsString.includes(relativePointString)) {
+      return null;
+    });
+
+    return {points, addScore};
+  };
+
+  shouldStop = (wantBlock, points) => {
+    //  Check accident with border of screen
+    if (
+      wantBlock.y < 0
+      || wantBlock.x < 0
+      || wantBlock.x + wantBlock.Component.getCurrentWidth(wantBlock.type) > this.state.width
+    ) return true;
+
+    //  Check accident with other points
+    let stop = false;
+    const currentRelativePoints = this.getRelativePoints(wantBlock);
+    points.every(point => {
+      currentRelativePoints.every(cRPoint => {
+        if (point.x === cRPoint.x && point.y === cRPoint.y) {
           stop = true;
-          return false;
         }
 
-        return true;
+        return !stop;
       });
 
       return !stop;
@@ -207,6 +284,7 @@ export default class extends React.Component {
     return stop;
   };
 
+  //  Get position of points in block with Yard
   getRelativePoints = (block) => {
     const relativePoints = [];
     const absolutePoints = block.Component.types[block.type];
@@ -214,19 +292,26 @@ export default class extends React.Component {
       relativePoints.push({
         x: block.x + point.x,
         y: block.y + point.y,
+        color: this.getBlockColor(block),
       });
     });
 
     return relativePoints;
   };
 
+  randomBlock = () => {
+    return {
+      Component: blockList[Math.floor(Math.random() * blockList.length)],
+      type: TYPE_1,
+    };
+  };
+
   newBlock = () => {
-    const Component = blockList[Math.floor(Math.random() * blockList.length)]
+    const block = this.randomBlock();
 
     return {
-      Component,
-      type: TYPE_1,
-      x: Math.floor(Math.random() * (this.state.width - Component.size.width)),
+      ...block,
+      x: Math.floor(Math.random() * (this.state.width - block.Component.size.width)),
       y: this.state.height,
     };
   };
@@ -256,21 +341,17 @@ export default class extends React.Component {
     }
   };
 
-  renderBlocks = () => {
-    const {blocks} = this.state;
+  renderPoints = () => {
+    const {points} = this.state;
 
-    return blocks.map((block, index) => {
-      const {Component} = block;
-      const color = this.getBlockColor(block);
-
+    return points.map((point, index) => {
       return (
-        <Component
-          type={block.type}
-          color={color}
+        <Point
           key={index}
+          data-color={point.color}
           style={{
-            bottom: block.y * POINT_SIZE + 'px',
-            left: block.x * POINT_SIZE + 'px',
+            bottom: point.y * POINT_SIZE + 'px',
+            left: point.x * POINT_SIZE + 'px',
           }}
         />
       );
@@ -305,7 +386,7 @@ export default class extends React.Component {
         height,
         transform,
       }}>
-        {this.renderBlocks()}
+        {this.renderPoints()}
         {this.renderCurrentBlock()}
       </div>
     );

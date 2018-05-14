@@ -6,10 +6,10 @@ export const NAME_BS = 'NAME_BS';
 export const NAME_BT = 'NAME_BT';
 export const NAME_BZ = 'NAME_BZ';
 
-export const TYPE_1 = 'TYPE_1';
-export const TYPE_2 = 'TYPE_2';
-export const TYPE_3 = 'TYPE_3';
-export const TYPE_4 = 'TYPE_4';
+export const TYPE_1 = 1;
+export const TYPE_2 = 2;
+export const TYPE_3 = 3;
+export const TYPE_4 = 4;
 
 export const COLOR_1 = 'red';
 export const COLOR_2 = 'orange';
