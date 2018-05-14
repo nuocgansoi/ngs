@@ -66,11 +66,11 @@
     [data-color="#{$color}"] {
       background-color: $color;
     }
-  };
+  }
 
   //  Yard
   .yard {
-    margin: 0 auto;
+    margin: (4.5 * $pointSize) auto 0;
     position: relative;
     border: 1px solid rgba($black, .2);
 

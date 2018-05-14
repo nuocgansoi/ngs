@@ -26,7 +26,9 @@ import {
   TYPE_4,
 } from './constants';
 
-const blockList = [BT, BI, BS, BZ, BL, BJ, BO];
+const BLOCK_LIST = [BT, BI, BS, BZ, BL, BJ, BO];
+
+const MIN_DURATION = 100;
 
 export default class extends React.Component {
   constructor(props) {
@@ -50,10 +52,11 @@ export default class extends React.Component {
       status: STATUS_RUN,
       score: 0,
       points,
-      currentBlock: {Component: BI, type: TYPE_1, x: 6, y: 10},
     };
+    this.state.currentBlock = this.newBlock();
+    this.state.nextBlock = this.newBlock();
 
-    this.duration = 500;
+    this.duration = this.getDuration(this.state.score);
   }
 
   componentDidMount() {
@@ -126,6 +129,16 @@ export default class extends React.Component {
 
       this.setState({currentBlock: wantBlock});
     },
+    fastDown: () => {
+      const {currentBlock, points} = this.state;
+      let y = currentBlock.y;
+      while (!this.shouldStop({...currentBlock, y}, points)) {
+        y--;
+      }
+      y++;
+
+      this.setState({currentBlock: {...currentBlock, y}});
+    },
     pauseOrResume: () => {
       if (this.state.status === STATUS_PAUSE) {
         this.setState({status: STATUS_RUN}, this.setTimeout);
@@ -155,7 +168,7 @@ export default class extends React.Component {
 
     if (KEYS.includes(keyCode)) e.preventDefault();
 
-    if (status === STATUS_PAUSE && keyCode !== KEY_SPACE) return;
+    if (status === STATUS_PAUSE && keyCode !== KEY_P) return;
 
     switch (keyCode) {
       case KEY_W:
@@ -167,7 +180,7 @@ export default class extends React.Component {
       case KEY_D:
         return this.controls.right();
       case KEY_SPACE:
-        this.controls.pauseOrResume();
+        this.controls.fastDown();
         return;
       case KEY_P:
         this.controls.pauseOrResume();
@@ -181,7 +194,7 @@ export default class extends React.Component {
   };
 
   run = () => {
-    let {currentBlock, points, score} = this.state;
+    let {currentBlock, nextBlock, points, score} = this.state;
     const wantBlock = {...currentBlock, y: currentBlock.y - 1};
     const state = {};
     const stop = this.shouldStop(wantBlock, points);
@@ -207,20 +220,36 @@ export default class extends React.Component {
         return false;
       }
 
+      //  Add current to points, generate new block
       const checkAddScore = this.checkAddScore([
         ...points,
         ...this.getRelativePoints(currentBlock),
       ]);
       state.points = checkAddScore.points;
-      state.currentBlock = this.newBlock();
-      if (checkAddScore.addScore) {
-        state.score = score + checkAddScore.addScore;
+      state.currentBlock = {...nextBlock, y: nextBlock.y - 1};
+      state.nextBlock = this.newBlock();
+
+      //  When eat the rows, grow up score, update duration
+      if (checkAddScore.count) {
+        state.score = score + checkAddScore.count * 2 - 1;
+
+        this.duration = this.getDuration(state.score);
       }
     }
 
     this.setState(state, this.setTimeout);
 
     return true;
+  };
+
+  getDuration = (score) => {
+    if (!score) return 500;
+
+    if (this.duration <= MIN_DURATION) return MIN_DURATION;
+
+    let duration = 500 - Math.floor(score / 10) * 50;
+
+    return duration > MIN_DURATION ? duration : MIN_DURATION;
   };
 
   checkAddScore = (points) => {
@@ -231,12 +260,12 @@ export default class extends React.Component {
       rows[point.y] = [...rows[point.y], point];
     });
 
-    let addScore = 0;
+    let count = 0;
 
     //  From top to bottom to keep row
     Object.keys(rows).reverse().map(rowIndex => {
       if (rows[rowIndex].length === this.state.width) {
-        addScore++;
+        count++;
 
         //  Remove point if it in removed row
         const rowString = JSON.stringify(rows[rowIndex]);
@@ -255,7 +284,7 @@ export default class extends React.Component {
       return null;
     });
 
-    return {points, addScore};
+    return {points, count};
   };
 
   shouldStop = (wantBlock, points) => {
@@ -301,7 +330,7 @@ export default class extends React.Component {
 
   randomBlock = () => {
     return {
-      Component: blockList[Math.floor(Math.random() * blockList.length)],
+      Component: BLOCK_LIST[Math.floor(Math.random() * BLOCK_LIST.length)],
       type: TYPE_1,
     };
   };
@@ -358,8 +387,8 @@ export default class extends React.Component {
     });
   };
 
-  renderCurrentBlock = () => {
-    const {currentBlock: block} = this.state;
+  renderNextBlock = () => {
+    const {nextBlock: block} = this.state;
     const {Component} = block;
     const color = this.getBlockColor(block);
 
@@ -372,6 +401,57 @@ export default class extends React.Component {
           left: block.x * POINT_SIZE + 'px',
         }}
       />
+    );
+  };
+
+  renderCurrentBlock = () => {
+    const {currentBlock: block} = this.state;
+    const {Component} = block;
+    const color = this.getBlockColor(block);
+
+    return (
+      <Component
+        type={block.type}
+        color={color}
+        style={{
+          bottom: block.y * POINT_SIZE + 'px',
+          left: block.x * POINT_SIZE + 'px',
+          zIndex: 9,
+        }}
+      />
+    );
+  };
+
+
+  //--------------------------------------------------------------------------------------------------------------------
+  //  Render Header |
+  //-----------------
+
+  getScoreString = (score) => {
+    if (score > 1000) return score;
+
+    score = '' + score;
+    const missing = 4 - score.length;
+    for (let i = 0; i < missing; i++) {
+      score = '0' + score;
+    }
+
+    return score;
+  };
+
+  renderHeader = () => {
+    const {score} = this.state;
+
+    return (
+      <div className="d-flex justify-content-between">
+        <div className="speed">
+          Speed: {1000 - this.duration}
+        </div>
+
+        <div className="score">
+          Score: {this.getScoreString(score)}
+        </div>
+      </div>
     );
   };
 
@@ -388,6 +468,7 @@ export default class extends React.Component {
       }}>
         {this.renderPoints()}
         {this.renderCurrentBlock()}
+        {this.renderNextBlock()}
       </div>
     );
   };
@@ -397,7 +478,8 @@ export default class extends React.Component {
       <div id="tetris" className="container">
         <h3>Tetris</h3>
 
-        <div ref="yardWrapper">
+        <div className="yardWrapper" ref="yardWrapper">
+          {this.renderHeader()}
           {this.renderYard()}
         </div>
 
