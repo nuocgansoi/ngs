@@ -1,3 +1,5 @@
+import {BI, BJ, BL, BO, BS, BT, BZ} from './blocks';
+
 export const NAME_BI = 'NAME_BI';
 export const NAME_BJ = 'NAME_BJ';
 export const NAME_BL = 'NAME_BL';
@@ -38,3 +40,5 @@ export const KEY_R = 82;
 export const KEY_P = 80;
 
 export const KEYS = [KEY_W, KEY_S, KEY_A, KEY_D, KEY_SPACE, KEY_R, KEY_P];
+
+export const BLOCK_LIST = [BT, BI, BS, BZ, BL, BJ, BO];

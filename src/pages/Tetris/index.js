@@ -1,15 +1,6 @@
 import React from 'react';
 import {Controller} from '../../components/Console';
-import {BI, BJ, BL, BO, BS, BT, BZ} from './blocks';
-import Point from './blocks/Point';
 import {
-  COLOR_1,
-  COLOR_2,
-  COLOR_3,
-  COLOR_4,
-  COLOR_5,
-  COLOR_6,
-  COLOR_7,
   KEY_A,
   KEY_D,
   KEY_P,
@@ -25,8 +16,8 @@ import {
   TYPE_1,
   TYPE_4,
 } from './constants';
-
-const BLOCK_LIST = [BT, BI, BS, BZ, BL, BJ, BO];
+import {getRelativePoints, getScoreString, randomBlock} from './functions';
+import Yard from './Yard';
 
 const MIN_DURATION = 100;
 
@@ -35,15 +26,6 @@ export default class extends React.Component {
     super(props);
 
     const points = [];
-
-    //  TODO:: remove after test
-    for (let i = 0; i < 10 - 1; i++) {
-      points.push({x: i, y: 0, color: 'green'});
-      points.push({x: i, y: 1, color: 'red'});
-    }
-    points.push({x: 2, y: 2, color: 'red'});
-    points.push({x: 3, y: 2, color: 'red'});
-    points.push({x: 3, y: 3, color: 'red'});
 
     this.state = {
       width: 10,
@@ -91,7 +73,7 @@ export default class extends React.Component {
       type = type > TYPE_4 ? TYPE_1 : type;
 
       const wantBlock = {...currentBlock, type};
-      const relativePoints = this.getRelativePoints(wantBlock);
+      const relativePoints = getRelativePoints(wantBlock);
 
       let toLeft = 0;
       let toRight = 0;
@@ -194,7 +176,7 @@ export default class extends React.Component {
   };
 
   run = () => {
-    let {currentBlock, nextBlock, points, score} = this.state;
+    let {currentBlock, nextBlock, points, score, height} = this.state;
     const wantBlock = {...currentBlock, y: currentBlock.y - 1};
     const state = {};
     const stop = this.shouldStop(wantBlock, points);
@@ -204,9 +186,9 @@ export default class extends React.Component {
     } else {  //  Add current block to static list, make new block
       //  Check DIE
       let gameOver = false;
-      const currentRelativePoints = this.getRelativePoints(wantBlock);
+      const currentRelativePoints = getRelativePoints(wantBlock);
       currentRelativePoints.every(point => {
-        if (point.y > this.state.height - 1) {
+        if (point.y > height - 1) {
           gameOver = true;
         }
 
@@ -214,7 +196,7 @@ export default class extends React.Component {
       });
 
       if (gameOver) {
-        console.log('game over');
+        alert('Game Over');
         this.controls.restart();
 
         return false;
@@ -223,7 +205,7 @@ export default class extends React.Component {
       //  Add current to points, generate new block
       const checkAddScore = this.checkAddScore([
         ...points,
-        ...this.getRelativePoints(currentBlock),
+        ...getRelativePoints(currentBlock),
       ]);
       state.points = checkAddScore.points;
       state.currentBlock = {...nextBlock, y: nextBlock.y - 1};
@@ -297,7 +279,7 @@ export default class extends React.Component {
 
     //  Check accident with other points
     let stop = false;
-    const currentRelativePoints = this.getRelativePoints(wantBlock);
+    const currentRelativePoints = getRelativePoints(wantBlock);
     points.every(point => {
       currentRelativePoints.every(cRPoint => {
         if (point.x === cRPoint.x && point.y === cRPoint.y) {
@@ -313,130 +295,14 @@ export default class extends React.Component {
     return stop;
   };
 
-  //  Get position of points in block with Yard
-  getRelativePoints = (block) => {
-    const relativePoints = [];
-    const absolutePoints = block.Component.types[block.type];
-    absolutePoints.forEach(point => {
-      relativePoints.push({
-        x: block.x + point.x,
-        y: block.y + point.y,
-        color: this.getBlockColor(block),
-      });
-    });
-
-    return relativePoints;
-  };
-
-  randomBlock = () => {
-    return {
-      Component: BLOCK_LIST[Math.floor(Math.random() * BLOCK_LIST.length)],
-      type: TYPE_1,
-    };
-  };
-
   newBlock = () => {
-    const block = this.randomBlock();
+    const block = randomBlock();
 
     return {
       ...block,
       x: Math.floor(Math.random() * (this.state.width - block.Component.size.width)),
       y: this.state.height,
     };
-  };
-
-
-  //--------------------------------------------------------------------------------------------------------------------
-  //  Render Blocks |
-  //-----------------
-
-  getBlockColor = (block) => {
-    switch (block.Component) {
-      case BI:
-        return COLOR_1;
-      case BJ:
-        return COLOR_2;
-      case BL:
-        return COLOR_3;
-      case BO:
-        return COLOR_4;
-      case BS:
-        return COLOR_5;
-      case BT:
-        return COLOR_6;
-      case BZ:
-      default:
-        return COLOR_7;
-    }
-  };
-
-  renderPoints = () => {
-    const {points} = this.state;
-
-    return points.map((point, index) => {
-      return (
-        <Point
-          key={index}
-          data-color={point.color}
-          style={{
-            bottom: point.y * POINT_SIZE + 'px',
-            left: point.x * POINT_SIZE + 'px',
-          }}
-        />
-      );
-    });
-  };
-
-  renderNextBlock = () => {
-    const {nextBlock: block} = this.state;
-    const {Component} = block;
-    const color = this.getBlockColor(block);
-
-    return (
-      <Component
-        type={block.type}
-        color={color}
-        style={{
-          bottom: block.y * POINT_SIZE + 'px',
-          left: block.x * POINT_SIZE + 'px',
-        }}
-      />
-    );
-  };
-
-  renderCurrentBlock = () => {
-    const {currentBlock: block} = this.state;
-    const {Component} = block;
-    const color = this.getBlockColor(block);
-
-    return (
-      <Component
-        type={block.type}
-        color={color}
-        style={{
-          bottom: block.y * POINT_SIZE + 'px',
-          left: block.x * POINT_SIZE + 'px',
-          zIndex: 9,
-        }}
-      />
-    );
-  };
-
-
-  //--------------------------------------------------------------------------------------------------------------------
-  //  Render Header |
-  //-----------------
-
-  getScoreString = (score) => {
-    if (score > 1000) return score;
-
-    score = '' + score;
-    const missing = 4 - score.length;
-    for (let i = 0; i < missing; i++) {
-      score = '0' + score;
-    }
-
-    return score;
   };
 
   renderHeader = () => {
@@ -449,38 +315,29 @@ export default class extends React.Component {
         </div>
 
         <div className="score">
-          Score: {this.getScoreString(score)}
+          Score: {getScoreString(score)}
         </div>
       </div>
     );
   };
 
-  renderYard = () => {
-    const {yardTransform: transform} = this.state;
-    const width = this.state.width * POINT_SIZE + 'px';
-    const height = this.state.height * POINT_SIZE + 'px';
-
-    return (
-      <div className="yard" style={{
-        width,
-        height,
-        transform,
-      }}>
-        {this.renderPoints()}
-        {this.renderCurrentBlock()}
-        {this.renderNextBlock()}
-      </div>
-    );
-  };
-
   render() {
+    const {points, currentBlock, nextBlock, yardTransform, width, height} = this.state;
+
     return (
       <div id="tetris" className="container">
         <h3>Tetris</h3>
 
         <div className="yardWrapper" ref="yardWrapper">
           {this.renderHeader()}
-          {this.renderYard()}
+          <Yard
+            points={points}
+            currentBlock={currentBlock}
+            nextBlock={nextBlock}
+            transform={yardTransform}
+            width={width}
+            height={height}
+          />
         </div>
 
         <div className="console">
