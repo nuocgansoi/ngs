@@ -23,6 +23,10 @@ export default class extends React.Component {
             <Item to={routes.tetris}>
               Tetris
             </Item>
+
+            <Item to={routes.park}>
+              Park
+            </Item>
           </div>
         </div>
       </div>
