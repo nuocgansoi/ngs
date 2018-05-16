@@ -1,6 +1,7 @@
 #rootWrapper {
   margin: 0 auto;
-  width: 576px;
+  position: relative;
+  width: 425px;
   max-width: 100%;
   min-height: 100vh;
   @include boxShadow(0 1px 1px 1px rgba($black, .2));

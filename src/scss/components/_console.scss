@@ -1,7 +1,7 @@
 .console {
   $buttonSize: 3rem;
 
-  position: fixed;
+  position: absolute;
   bottom: 0;
   left: 0;
   right: 0;
@@ -15,10 +15,8 @@
     @include transform(rotate(-45deg) translate(15%, 15%));
   }
 
-  .button1, .button2 {
+  .button {
     margin: .125rem;
-    width: $buttonSize;
-    height: $buttonSize;
     border: 1px solid rgba($black, .3);
     display: flex;
     align-items: center;
@@ -31,8 +29,17 @@
 
     &:active {
       background-color: rgba($black, .2);
-      border-left-width: 1px;
       border-bottom-width: 1px;
+    }
+  }
+
+  .button1, .button2 {
+    @extend .button;
+    width: $buttonSize;
+    height: $buttonSize;
+
+    &:active {
+      border-left-width: 1px;
     }
   }
 
@@ -42,5 +49,11 @@
 
   .button2 {
     border-left: 1px solid rgba($black, .3);
+  }
+
+  .button3 {
+    @extend .button;
+    padding: 0 .25rem;
+    font-size: .75rem;
   }
 }

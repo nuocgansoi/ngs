@@ -28,7 +28,7 @@ export default class extends React.Component {
     const points = [];
 
     this.state = {
-      width: 10,
+      width: 13,
       height: 20,
       yardTransform: '',
       status: STATUS_RUN,
@@ -67,7 +67,13 @@ export default class extends React.Component {
   };
 
   controls = {
+    canMove: () => {
+      const {status} = this.state;
+      return status === STATUS_RUN;
+    },
     up: () => {
+      if (!this.controls.canMove()) return null;
+
       const {currentBlock, points} = this.state;
       let type = currentBlock.type + 1;
       type = type > TYPE_4 ? TYPE_1 : type;
@@ -91,6 +97,8 @@ export default class extends React.Component {
       this.setState({currentBlock: wantBlock});
     },
     left: () => {
+      if (!this.controls.canMove()) return null;
+
       const {currentBlock, points} = this.state;
       const wantBlock = {...currentBlock, x: currentBlock.x - 1};
       if (this.shouldStop(wantBlock, points)) return null;
@@ -98,6 +106,8 @@ export default class extends React.Component {
       this.setState({currentBlock: wantBlock});
     },
     right: () => {
+      if (!this.controls.canMove()) return null;
+
       const {currentBlock, points} = this.state;
       const wantBlock = {...currentBlock, x: currentBlock.x + 1};
       if (this.shouldStop(wantBlock, points)) return null;
@@ -105,6 +115,8 @@ export default class extends React.Component {
       this.setState({currentBlock: wantBlock});
     },
     down: () => {
+      if (!this.controls.canMove()) return null;
+
       const {currentBlock, points} = this.state;
       const wantBlock = {...currentBlock, y: currentBlock.y - 1};
       if (this.shouldStop(wantBlock, points)) return null;
@@ -112,6 +124,8 @@ export default class extends React.Component {
       this.setState({currentBlock: wantBlock});
     },
     fastDown: () => {
+      if (!this.controls.canMove()) return null;
+
       const {currentBlock, points} = this.state;
       let y = currentBlock.y;
       while (!this.shouldStop({...currentBlock, y}, points)) {
@@ -322,7 +336,8 @@ export default class extends React.Component {
   };
 
   render() {
-    const {points, currentBlock, nextBlock, yardTransform, width, height} = this.state;
+    const {points, currentBlock, nextBlock, yardTransform, width, height, status} = this.state;
+    const pauseOrResume = status === STATUS_PAUSE ? 'Resume' : 'Pause';
 
     return (
       <div id="tetris" className="container">
@@ -341,7 +356,21 @@ export default class extends React.Component {
         </div>
 
         <div className="console">
-          <Controller controls={this.controls}/>
+          <div className="top d-flex justify-content-end">
+            <div className="button3" onClick={this.controls.pauseOrResume}>
+              {pauseOrResume}
+            </div>
+          </div>
+
+          <div className="d-flex justify-content-between align-items-center">
+            <Controller controls={this.controls}/>
+
+            <div className="right">
+              <div className="button2" onClick={this.controls.fastDown}>
+                <i className="fab fa-accessible-icon fa-2x"/>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     );
