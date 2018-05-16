@@ -2,6 +2,7 @@ const Storage = window.localStorage;
 
 const storage = {
   SNAKE: 'SNAKE',
+  TETRIS: 'TETRIS',
   set: (key, value) => {
     if (typeof value === 'object') {
       value = JSON.stringify(value);
@@ -38,6 +39,19 @@ const storage = {
     },
     setHighScore: (score) => storage.set(storage.SNAKE, {
       ...storage.snake.all(),
+      HIGH_SCORE: score,
+    }),
+  },
+  tetris: {
+    all: () => storage.get(storage.TETRIS) || {},
+    getHighScore: () => {
+      const data = storage.get(storage.TETRIS);
+      if (!data) return 0;
+
+      return data['HIGH_SCORE'] || 0;
+    },
+    setHighScore: (score) => storage.set(storage.TETRIS, {
+      ...storage.tetris.all(),
       HIGH_SCORE: score,
     }),
   },

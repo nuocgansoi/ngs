@@ -1,5 +1,6 @@
 import React from 'react';
 import {Controller} from '../../components/Console';
+import storage from '../../storage';
 import {
   KEY_A,
   KEY_D,
@@ -25,7 +26,7 @@ export default class extends React.Component {
   constructor(props) {
     super(props);
 
-    const points = [];
+    this.highScore = storage.tetris.getHighScore() || 0;
 
     this.state = {
       width: 13,
@@ -33,7 +34,7 @@ export default class extends React.Component {
       yardTransform: '',
       status: STATUS_RUN,
       score: 0,
-      points,
+      points: [],
     };
     this.state.currentBlock = this.newBlock();
     this.state.nextBlock = this.newBlock();
@@ -211,7 +212,7 @@ export default class extends React.Component {
 
       if (gameOver) {
         alert('Game Over');
-        this.controls.restart();
+        this.gameOver(score);
 
         return false;
       }
@@ -236,6 +237,15 @@ export default class extends React.Component {
     this.setState(state, this.setTimeout);
 
     return true;
+  };
+
+  gameOver = (score) => {
+    this.updateHighScore(score);
+    this.controls.restart();
+  };
+
+  updateHighScore = (score) => {
+    if (score > this.highScore) storage.tetris.setHighScore(score);
   };
 
   getDuration = (score) => {
@@ -324,12 +334,17 @@ export default class extends React.Component {
 
     return (
       <div className="d-flex justify-content-between">
-        <div className="speed">
+        <div className="speed align-self-end">
           Speed: {1000 - this.duration}
         </div>
 
-        <div className="score">
-          Score: {getScoreString(score)}
+        <div className="text-right">
+          <div className="score">
+            High: {getScoreString(this.highScore)}
+          </div>
+          <div className="score">
+            Score: {getScoreString(score)}
+          </div>
         </div>
       </div>
     );
@@ -341,8 +356,6 @@ export default class extends React.Component {
 
     return (
       <div id="tetris" className="container">
-        <h3>Tetris</h3>
-
         <div className="yardWrapper" ref="yardWrapper">
           {this.renderHeader()}
           <Yard
