@@ -1,4 +1,5 @@
 import React from 'react';
+import {offset} from '../../helper.js';
 
 export default class CanvasTmp extends React.Component {
   static defaultProps = {
@@ -9,6 +10,10 @@ export default class CanvasTmp extends React.Component {
   name = 'theCanvas';
   mouse = null;
   canvas = null;
+  offset = {
+    x: 0,
+    y: 0,
+  };
 
   constructor(props) {
     super(props);
@@ -20,6 +25,10 @@ export default class CanvasTmp extends React.Component {
   componentDidMount() {
     document.addEventListener('mousemove', this.onMouseMove, false);
     this.canvas = this.refs.canvas;
+
+    const canvasOffset = offset(this.canvas);
+    this.offset.x = canvasOffset.offsetLeft;
+    this.offset.y = canvasOffset.offsetTop;
 
     requestAnimationFrame(this.draw);
   }
