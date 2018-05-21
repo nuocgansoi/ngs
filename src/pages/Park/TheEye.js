@@ -11,10 +11,6 @@ export default class TheEye extends React.Component {
   eyeCenter = {x: 0, y: 0};
   mouse = null;
 
-  constructor(props) {
-    super(props);
-  }
-
   componentDidMount() {
     document.addEventListener('mousemove', this.onMouseMove, false);
 
@@ -43,7 +39,6 @@ export default class TheEye extends React.Component {
     };
   };
 
-  // TODO:: draw Eye Pupil
   drawPupil = () => {
     const {width, height} = this.props;
     const ctx = this.eye.getContext('2d');
@@ -142,7 +137,6 @@ export default class TheEye extends React.Component {
     return (
       <div className="theEye d-flex justify-content-center">
         <canvas
-          id="eye"
           ref="eye"
           width={`${width}px`}
           height={`${height}px`}
