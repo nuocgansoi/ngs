@@ -11,6 +11,22 @@ export default class TheGalaxy extends CanvasTmp {
     number: 50,
   };
 
+  componentDidMount() {
+    super.componentDidMount();
+
+    this.refs.canvas.addEventListener('mousemove', this.onHover, false);
+    this.refs.canvas.addEventListener('mouseout', () => {
+      this.mouseHover = null;
+    }, false);
+  }
+
+  onHover = (e) => {
+    this.mouseHover = {
+      x: e.clientX - this.offset.x,
+      y: e.clientY - this.offset.y,
+    };
+  };
+
   draw() {
     if (++this.frameCount % 1 !== 0) {
       requestAnimationFrame(this.draw);
@@ -81,11 +97,39 @@ export default class TheGalaxy extends CanvasTmp {
         point.a.y = -point.a.y;
       }
 
-      point.x += point.a.x;
-      point.y += point.a.y;
+      const nextPoint = {
+        ...point,
+        x: point.x + point.a.x,
+        y: point.y + point.a.y,
+      };
+      if (this.mouseHover) {
+        //  Khoảng cách đến vị trí con trỏ chuột
+        const mouseDist = Math.sqrt(
+          Math.pow(this.mouseHover.x - point.x, 2)
+          + Math.pow(this.mouseHover.y - point.y, 2),
+        );
+
+        //  Trong phạm vi
+        if (mouseDist <= maxDist) {
+          //  Tăng tốc
+          nextPoint.x += nextPoint.a.x;
+          nextPoint.y += nextPoint.a.y;
+
+          const nextMouseDist = Math.sqrt(
+            Math.pow(this.mouseHover.x - nextPoint.x, 2)
+            + Math.pow(this.mouseHover.y - nextPoint.y, 2),
+          );
+
+          //  Giữ lại nếu tới biên
+          if (nextMouseDist > mouseDist && nextMouseDist >= maxDist) {
+            nextPoint.x = point.x;
+            nextPoint.y = point.y;
+          }
+        }
+      }
 
       this.randomPoints[index] = {
-        ...point,
+        ...nextPoint,
       };
     });
 
