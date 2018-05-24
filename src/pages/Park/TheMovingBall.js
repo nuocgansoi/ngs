@@ -47,6 +47,7 @@ export default class TheMovingBall extends CanvasTmp {
       return null;
     }
 
+    const oldBall = {...this.ball};
     this.ball.x += (this.destination.x - this.ball.x) * .1;
     this.ball.y += (this.destination.y - this.ball.y) * .1;
 
@@ -54,6 +55,13 @@ export default class TheMovingBall extends CanvasTmp {
     ctx.arc(this.ball.x, this.ball.y, this.ball.radius, 0, 2 * Math.PI);
     ctx.fillStyle = 'green';
     ctx.fill();
+
+    ctx.beginPath();
+    ctx.moveTo(oldBall.x - (this.ball.x - oldBall.x) * 5, oldBall.y - (this.ball.y - oldBall.y) * 5);
+    ctx.lineTo(this.ball.x, this.ball.y);
+    ctx.strokeStyle = 'green';
+    ctx.lineWidth = 2;
+    ctx.stroke();
 
     requestAnimationFrame(this.draw);
 

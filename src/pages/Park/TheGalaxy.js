@@ -6,6 +6,11 @@ export default class TheGalaxy extends CanvasTmp {
   randomPoints = [];
   frameCount = 0;
 
+  static defaultProps = {
+    ...CanvasTmp.defaultProps,
+    number: 50,
+  };
+
   draw() {
     if (++this.frameCount % 1 !== 0) {
       requestAnimationFrame(this.draw);
@@ -19,11 +24,11 @@ export default class TheGalaxy extends CanvasTmp {
     //   return null;
     // }
 
-    const {width, height} = this.props;
+    const {width, height, number} = this.props;
     const maxDist = height / 5;
 
     if (!this.randomPoints.length) {
-      for (let i = 0; i < 50; i++) {
+      for (let i = 0; i < number; i++) {
         this.randomPoints.push({
           x: Math.round(Math.random() * width),
           y: Math.round(Math.random() * height),
