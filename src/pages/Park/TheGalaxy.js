@@ -21,9 +21,10 @@ export default class TheGalaxy extends CanvasTmp {
   }
 
   onHover = (e) => {
+    const viewPortOffset = this.refs.canvas.getBoundingClientRect();
     this.mouseHover = {
-      x: e.clientX - this.offset.x,
-      y: e.clientY - this.offset.y,
+      x: e.clientX - viewPortOffset.left,
+      y: e.clientY - viewPortOffset.top,
     };
   };
 
