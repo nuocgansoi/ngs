@@ -1,0 +1,41 @@
+#g2048 {
+  .yard {
+    position: relative;
+    padding-top: 100%;
+    width: 100%;
+    border: 1px solid;
+  }
+
+  .block {
+    position: absolute;
+    width: 25%;
+    @include transition(all ease 250ms);
+
+    .blockBody {
+      width: 100%;
+      padding-top: 100%;
+      border: 1px solid rgba(0, 0, 0, .5);
+      border-radius: 4px;
+      background-color: #F9A825;
+    }
+
+    @for $i from 1 through 10 {
+      &[data-value="#{pow(2, $i)}"] {
+        .blockBody {
+          opacity: $i * 0.1;
+        }
+      }
+    }
+
+    .value {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -webkit-transform: translate(-50%, -50%);
+      -moz-transform: translate(-50%, -50%);
+      -ms-transform: translate(-50%, -50%);
+      -o-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+  }
+}

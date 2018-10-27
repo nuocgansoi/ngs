@@ -3,4 +3,5 @@ export default {
   snake: '/snake',
   tetris: '/tetris',
   park: '/park',
+  g2048: '/g2048',
 };

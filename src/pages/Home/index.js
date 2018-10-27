@@ -27,6 +27,10 @@ export default class extends React.Component {
             <Item to={routes.park}>
               Park
             </Item>
+
+            <Item to={routes.g2048}>
+              2048
+            </Item>
           </div>
         </div>
       </div>
