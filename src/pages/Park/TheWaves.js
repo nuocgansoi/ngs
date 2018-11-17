@@ -1,4 +1,3 @@
-import React from 'react';
 import CanvasTmp from './CanvasTmp.js';
 
 const MARGIN_X = 20;

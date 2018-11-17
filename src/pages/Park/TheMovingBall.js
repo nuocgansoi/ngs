@@ -1,4 +1,3 @@
-import React from 'react';
 import CanvasTmp from './CanvasTmp.js';
 
 export default class TheMovingBall extends CanvasTmp {

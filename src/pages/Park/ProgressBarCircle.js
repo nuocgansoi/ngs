@@ -1,4 +1,3 @@
-import React from 'react';
 import CanvasTmp from './CanvasTmp';
 
 const DURATION = 300;
