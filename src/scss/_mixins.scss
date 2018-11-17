@@ -20,6 +20,12 @@
   transition: $value;
 }
 
+@mixin animation($value) {
+  -webkit-animation: $value;
+  -o-animation: $value;
+  animation: $value;
+}
+
 @function pow($number, $exponent) {
   $value: 1;
 

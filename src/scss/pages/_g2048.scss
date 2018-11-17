@@ -1,3 +1,15 @@
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    @include transform(scale(1.2));
+  }
+
+  to {
+    opacity: 1;
+    @include transform(scale(1));
+  }
+}
+
 #g2048 {
   .yard {
     position: relative;
@@ -9,6 +21,7 @@
   .block {
     position: absolute;
     width: 25%;
+    @include animation(fadeIn 500ms);
     @include transition(all ease 250ms);
 
     .blockBody {

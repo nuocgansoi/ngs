@@ -5,6 +5,7 @@ export default class G2048 extends React.Component {
   constructor(props) {
     super(props);
 
+    this.blockCount = 0;
     this.state = {
       blocks: [],
     };
@@ -39,6 +40,8 @@ export default class G2048 extends React.Component {
         break;
       case KEY_D:
         this.move.right();
+        break;
+      default:
         break;
     }
   };
@@ -78,7 +81,7 @@ export default class G2048 extends React.Component {
     const value = 2 + Math.round(Math.random()) * 2;
     const {x, y} = this.randomBlockPosition(blocks);
 
-    return {x, y, value};
+    return {x, y, value, key: this.blockCount++};
   };
 
   randomBlockPosition = (blocks) => {
@@ -105,16 +108,16 @@ export default class G2048 extends React.Component {
       };
       let movingCount = 0;
 
-      blocks.map(block => {
+      blocks.forEach(block => {
         columns[block.x].push(block);
       });
       let newBlocks = [];
 
-      Object.keys(columns).map(columnIndex => {
+      Object.keys(columns).forEach(columnIndex => {
         const columnBlocks = columns[columnIndex].sort((a, b) => a.y - b.y);
         let newColumnBlocks = [];
 
-        columnBlocks.map(columnBlock => {
+        columnBlocks.forEach(columnBlock => {
           if (columnBlock.y === 0) {
             newColumnBlocks.push(columnBlock);
           } else {
@@ -130,13 +133,12 @@ export default class G2048 extends React.Component {
               if (nearbyBlock.value === columnBlock.value) {
                 movingCount++;
 
-                newColumnBlocks = newColumnBlocks.map(ncb => {
-                  if (ncb.y === nearbyBlock.y) {
-                    ncb.value *= 2;
-                  }
+                newColumnBlocks = newColumnBlocks.filter(ncb => ncb.y !== nearbyBlock.y);
+                columnBlock.x = nearbyBlock.x;
+                columnBlock.y = nearbyBlock.y;
+                columnBlock.value *= 2;
 
-                  return ncb;
-                });
+                newColumnBlocks.push(columnBlock);
               } else {
                 if (columnBlock.y !== nearbyBlock.y + 1) {
                   movingCount++;
@@ -156,7 +158,7 @@ export default class G2048 extends React.Component {
 
       this.setState({
         blocks: [
-          ...newBlocks,
+          ...newBlocks.sort((a, b) => a.key - b.key),
           this.randomBlock(newBlocks),
         ],
       });
@@ -172,16 +174,16 @@ export default class G2048 extends React.Component {
       };
       let movingCount = 0;
 
-      blocks.map(block => {
+      blocks.forEach(block => {
         rows[block.y].push(block);
       });
       let newBlocks = [];
 
-      Object.keys(rows).map(columnIndex => {
+      Object.keys(rows).forEach(columnIndex => {
         const rowBlocks = rows[columnIndex].sort((a, b) => a.x - b.x);
         let newRowBlocks = [];
 
-        rowBlocks.map(rowBlock => {
+        rowBlocks.forEach(rowBlock => {
           if (rowBlock.x === 0) {
             newRowBlocks.push(rowBlock);
           } else {
@@ -197,13 +199,12 @@ export default class G2048 extends React.Component {
               if (nearbyBlock.value === rowBlock.value) {
                 movingCount++;
 
-                newRowBlocks = newRowBlocks.map(ncb => {
-                  if (ncb.x === nearbyBlock.x) {
-                    ncb.value *= 2;
-                  }
+                newRowBlocks = newRowBlocks.filter(nrb => nrb.x !== nearbyBlock.x);
+                rowBlock.x = nearbyBlock.x;
+                rowBlock.y = nearbyBlock.y;
+                rowBlock.value *= 2;
 
-                  return ncb;
-                });
+                newRowBlocks.push(rowBlock);
               } else {
                 if (rowBlock.x !== nearbyBlock.x + 1) {
                   movingCount++;
@@ -223,7 +224,7 @@ export default class G2048 extends React.Component {
 
       this.setState({
         blocks: [
-          ...newBlocks,
+          ...newBlocks.sort((a, b) => a.key - b.key),
           this.randomBlock(newBlocks),
         ],
       });
@@ -239,16 +240,16 @@ export default class G2048 extends React.Component {
       };
       let movingCount = 0;
 
-      blocks.map(block => {
+      blocks.forEach(block => {
         columns[block.x].push(block);
       });
       let newBlocks = [];
 
-      Object.keys(columns).map(columnIndex => {
+      Object.keys(columns).forEach(columnIndex => {
         const columnBlocks = columns[columnIndex].sort((a, b) => b.y - a.y);
         let newColumnBlocks = [];
 
-        columnBlocks.map(columnBlock => {
+        columnBlocks.forEach(columnBlock => {
           if (columnBlock.y === 3) {
             newColumnBlocks.push(columnBlock);
           } else {
@@ -264,13 +265,12 @@ export default class G2048 extends React.Component {
               if (nearbyBlock.value === columnBlock.value) {
                 movingCount++;
 
-                newColumnBlocks = newColumnBlocks.map(ncb => {
-                  if (ncb.y === nearbyBlock.y) {
-                    ncb.value *= 2;
-                  }
+                newColumnBlocks = newColumnBlocks.filter(ncb => ncb.y !== nearbyBlock.y);
+                columnBlock.x = nearbyBlock.x;
+                columnBlock.y = nearbyBlock.y;
+                columnBlock.value *= 2;
 
-                  return ncb;
-                });
+                newColumnBlocks.push(columnBlock);
               } else {
                 if (columnBlock.y !== nearbyBlock.y - 1) {
                   movingCount++;
@@ -290,7 +290,7 @@ export default class G2048 extends React.Component {
 
       this.setState({
         blocks: [
-          ...newBlocks,
+          ...newBlocks.sort((a, b) => a.key - b.key),
           this.randomBlock(newBlocks),
         ],
       });
@@ -306,16 +306,16 @@ export default class G2048 extends React.Component {
       };
       let movingCount = 0;
 
-      blocks.map(block => {
+      blocks.forEach(block => {
         rows[block.y].push(block);
       });
       let newBlocks = [];
 
-      Object.keys(rows).map(columnIndex => {
+      Object.keys(rows).forEach(columnIndex => {
         const rowBlocks = rows[columnIndex].sort((a, b) => b.x - a.x);
         let newRowBlocks = [];
 
-        rowBlocks.map(rowBlock => {
+        rowBlocks.forEach(rowBlock => {
           if (rowBlock.x === 3) {
             newRowBlocks.push(rowBlock);
           } else {
@@ -331,13 +331,12 @@ export default class G2048 extends React.Component {
               if (nearbyBlock.value === rowBlock.value) {
                 movingCount++;
 
-                newRowBlocks = newRowBlocks.map(ncb => {
-                  if (ncb.x === nearbyBlock.x) {
-                    ncb.value *= 2;
-                  }
+                newRowBlocks = newRowBlocks.filter(ncb => ncb.x !== nearbyBlock.x);
+                rowBlock.x = nearbyBlock.x;
+                rowBlock.y = nearbyBlock.y;
+                rowBlock.value *= 2;
 
-                  return ncb;
-                });
+                newRowBlocks.push(rowBlock);
               } else {
                 if (rowBlock.x !== nearbyBlock.x - 1) {
                   movingCount++;
@@ -357,7 +356,7 @@ export default class G2048 extends React.Component {
 
       this.setState({
         blocks: [
-          ...newBlocks,
+          ...newBlocks.sort((a, b) => a.key - b.key),
           this.randomBlock(newBlocks),
         ],
       });
@@ -379,7 +378,7 @@ export default class G2048 extends React.Component {
             top: block.y * 25 + '%',
           }}
           className="block"
-          key={index}
+          key={block.key}
         >
           <div className="blockBody">
           </div>
