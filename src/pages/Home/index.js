@@ -31,6 +31,10 @@ export default class extends React.Component {
             <Item to={routes.g2048}>
               2048
             </Item>
+
+            <Item to={routes.testing}>
+              Testing
+            </Item>
           </div>
         </div>
       </div>

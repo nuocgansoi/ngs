@@ -3,8 +3,8 @@ import {offset} from '../../helper.js';
 
 export default class CanvasTmp extends React.Component {
   static defaultProps = {
-    width: 200,
-    height: 100,
+    width: 300,
+    height: 150,
   };
 
   name = 'theCanvas';
@@ -35,28 +35,33 @@ export default class CanvasTmp extends React.Component {
 
   onMouseMove(e) {
     this.mouse = {
-      x: e.clientX,
-      y: e.clientY,
+      x: e.clientX + window.pageXOffset,
+      y: e.clientY + window.pageYOffset,
     };
   };
 
   draw() {
   }
 
+  renderButtons() { return null; }
+
   render() {
     const {width, height} = this.props;
 
     return (
-      <div className={this.name}>
-        <canvas
-          ref="canvas"
-          width={width}
-          height={height}
-          style={{
-            display: 'block',
-            border: '1px solid #333',
-          }}
-        />
+      <div>
+        {this.renderButtons()}
+        <div className={this.name}>
+          <canvas
+            ref="canvas"
+            width={width}
+            height={height}
+            style={{
+              display: 'block',
+              border: '1px solid #333',
+            }}
+          />
+        </div>
       </div>
     );
   }

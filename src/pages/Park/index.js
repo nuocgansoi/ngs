@@ -1,4 +1,5 @@
 import React from 'react';
+import BallDrop from './BallDrop';
 import ProgressBarCircle from './ProgressBarCircle';
 import TheEye from './TheEye';
 import TheGalaxy from './TheGalaxy.js';
@@ -37,6 +38,10 @@ export default class Park extends React.Component {
 
         <Block title="Auto change color">
           <ProgressBarCircle width={300} height={300}/>
+        </Block>
+
+        <Block title="Ball drop">
+          <BallDrop width={300} height={400}/>
         </Block>
       </div>
     );
