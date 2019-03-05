@@ -16,16 +16,16 @@ export default class extends React.Component {
       <div id="home">
         <div className="container">
           <div className="gameList">
+            <Item to={routes.park}>
+              Park
+            </Item>
+
             <Item to={routes.snake}>
               Snake
             </Item>
 
             <Item to={routes.tetris}>
               Tetris
-            </Item>
-
-            <Item to={routes.park}>
-              Park
             </Item>
 
             <Item to={routes.g2048}>

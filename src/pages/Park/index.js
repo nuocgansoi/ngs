@@ -1,6 +1,7 @@
 import React from 'react';
 import BallDrop from './BallDrop';
 import ProgressBarCircle from './ProgressBarCircle';
+import ShootTheBall from './ShootTheBall';
 import TheEye from './TheEye';
 import TheGalaxy from './TheGalaxy.js';
 import TheMovingBall from './TheMovingBall.js';
@@ -17,14 +18,14 @@ export default class Park extends React.Component {
       <div id="park">
         <h4>Park</h4>
 
-        <Block title="Move course around">
+        <Block title="Move cursor around">
           <div className="d-flex">
             <TheEye width={100} height={50}/>
             <TheEye width={100} height={50}/>
           </div>
         </Block>
 
-        <Block title="Click to move ball">
+        <Block title="Click to drive the ball">
           <TheMovingBall width={300} height={400}/>
         </Block>
 
@@ -43,6 +44,10 @@ export default class Park extends React.Component {
         <Block title="Ball drop">
           <BallDrop width={300} height={400}/>
         </Block>
+
+        <Block title="Shoot The Ball">
+          <ShootTheBall width={300} height={400}/>
+        </Block>
       </div>
     );
   }
@@ -50,7 +55,7 @@ export default class Park extends React.Component {
 
 const Block = ({title, children}) => (
   <div className="d-flex flex-column mb-3 align-items-center">
-    <div className="small">
+    <div className="">
       {title}
     </div>
     {children}

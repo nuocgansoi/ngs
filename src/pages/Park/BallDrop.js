@@ -27,7 +27,7 @@ export default class BallDrop extends CanvasTmp {
 
   renderButtons() {
     return (
-      <div className="d-flex mb-1">
+      <React.Fragment>
         <div
           onClick={this.clear}
           className="btn btn-sm btn-outline-danger mr-2"
@@ -47,7 +47,7 @@ export default class BallDrop extends CanvasTmp {
           />
           <span>Auto Click</span>
         </div>
-      </div>
+      </React.Fragment>
     );
   }
 
