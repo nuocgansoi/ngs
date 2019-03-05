@@ -13,6 +13,7 @@ export default class TheEye extends React.Component {
 
   componentDidMount() {
     document.addEventListener('mousemove', this.onMouseMove, false);
+    document.addEventListener('touchmove', this.touchMove, false);
 
     this.eye = this.refs.eye;
     const eyeOffset = offset(this.eye);
@@ -30,12 +31,23 @@ export default class TheEye extends React.Component {
 
   componentWillUnmount() {
     document.removeEventListener('mousemove', this.onMouseMove, false);
+    document.removeEventListener('touchmove', this.touchMove, false);
   }
 
   onMouseMove = (e) => {
     this.mouse = {
       x: e.clientX,
       y: e.clientY,
+    };
+  };
+
+  touchMove = (e) => {
+    const touches = e.changedTouches;
+    const touch = touches[0];
+
+    this.mouse = {
+      x: touch.clientX,
+      y: touch.clientY,
     };
   };
 
