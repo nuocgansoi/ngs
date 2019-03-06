@@ -8,8 +8,12 @@ export default class BallDrop extends CanvasTmp {
 
   balls = [];
 
+  lockWindowScroll = true;
+
   state = {
     autoClick: false,
+    bounce: true,
+    loop: false,
   };
 
   componentDidMount() {
@@ -17,6 +21,7 @@ export default class BallDrop extends CanvasTmp {
 
     this.refs.canvas.onclick = this.onClick;
     this.refs.canvas.addEventListener('mousemove', this.onHover, false);
+    this.refs.canvas.addEventListener('touchmove', this.touchMove, false);
   }
 
   onHover = (e) => {
@@ -25,18 +30,28 @@ export default class BallDrop extends CanvasTmp {
     }
   };
 
+  touchMove(e) {
+    super.touchMove(e);
+    if (this.state.autoClick) {
+      this.onClick();
+    }
+  };
+
   renderButtons() {
     return (
       <React.Fragment>
+        {/*Clear*/}
         <div
           onClick={this.clear}
-          className="btn btn-sm btn-outline-danger mr-2"
+          className="btn btn-sm btn-outline-danger"
         >
           <i className="fa fa-trash mr-1"/>
           <span>Clear</span>
         </div>
+
+        {/*Auto click*/}
         <div
-          onClick={this.toggleAutoClick}
+          onClick={this.toggle('autoClick')}
           className="btn btn-sm btn-outline-info"
         >
           <i
@@ -46,6 +61,34 @@ export default class BallDrop extends CanvasTmp {
             }
           />
           <span>Auto Click</span>
+        </div>
+
+        {/*Bounce*/}
+        <div
+          onClick={this.toggle('bounce')}
+          className="btn btn-sm btn-outline-info"
+        >
+          <i
+            className={
+              'fa mr-1 ' +
+              (this.state.bounce ? 'fa-check-square' : 'fa-square')
+            }
+          />
+          <span>Bounce</span>
+        </div>
+
+        {/*Loop*/}
+        <div
+          onClick={this.toggle('loop')}
+          className="btn btn-sm btn-outline-info"
+        >
+          <i
+            className={
+              'fa mr-1 ' +
+              (this.state.loop ? 'fa-check-square' : 'fa-square')
+            }
+          />
+          <span>Loop</span>
         </div>
       </React.Fragment>
     );
@@ -73,9 +116,11 @@ export default class BallDrop extends CanvasTmp {
     this.balls = [];
   };
 
-  toggleAutoClick = () => {
+  toggle = (stateName) => () => {
+    const value = this.state[stateName];
+
     this.setState({
-      autoClick: !this.state.autoClick,
+      [stateName]: !value,
     });
   };
 
@@ -88,27 +133,50 @@ export default class BallDrop extends CanvasTmp {
       ctx.arc(ball.x, ball.y, ball.radius, 0, 2 * Math.PI);
       ctx.fillStyle = ball.color;
       ctx.fill();
-      ball.t++;
     }
   };
 
   dropping = ball => {
-    const time = ball.t / 500;
-    ball.x = ball.x0;
-    ball.y = ball.y0 +
-      ball.v0 * time +
-      1 / 2 * this.g * Math.pow(time, 2);
+    ball.t += 1;
 
-    //  Chạm đất
-    if (ball.y >= this.props.height - ball.radius) {
-      ball.y0 = ball.y;
-      ball.t = 0;
-      ball.v0 = -(ball.v0 + this.g * time);
+    if (this.state.loop) {
+      if (ball.v === 0) {
+        ball.v += 1 / 2 * ball.radius / 25;
+      }
+    } else {
+      //  Trọng lực
+      ball.v += 1 / 2 * ball.radius / 25;
+    }
 
-      if (ball.v0 < -400) {
-        ball.v0 += 400;
-      } else {
-        ball.v0 = 0;
+    ball.y += ball.v;
+
+    if (this.state.bounce) {
+      //  Wrap y
+      ball.y = ball.y < ball.radius ? ball.radius : ball.y;
+      ball.y = (ball.y > this.props.height - ball.radius) ? this.props.height - ball.radius : ball.y;
+    }
+
+    if (!this.state.loop) {
+      //  Ma sát
+      ball.v *= .995;
+    }
+
+    //  Chạm trên | dưới
+    if (this.state.bounce) {
+      if (
+        ball.y <= ball.radius ||
+        ball.y >= this.props.height - ball.radius
+      ) {
+        ball.t = 0;
+        ball.v *= -1;
+      }
+    } else {
+      //  Khi bật loop
+      if (this.state.loop) {
+        if (ball.y >= this.props.height + ball.radius) {
+          ball.y = -ball.radius;
+          ball.t = 0;
+        }
       }
     }
 
@@ -119,12 +187,12 @@ export default class BallDrop extends CanvasTmp {
     if (!this.mouse) return;
 
     const ball = {
-      x0: this.mouse.x - this.offset.x,
-      y0: this.mouse.y - this.offset.y,
+      x: this.mouse.x - this.offset.x,
+      y: this.mouse.y - this.offset.y,
       radius: Math.round(Math.random() * 20),
-      v0: 0,
-      t: 0,
       color: this.randomColor(),
+      t: 0,
+      v: 0,
     };
 
     this.balls.push(ball);
