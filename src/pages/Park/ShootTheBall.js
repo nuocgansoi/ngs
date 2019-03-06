@@ -33,7 +33,7 @@ export default class ShootTheBall extends CanvasTmp {
       ctx.fillStyle = 'Black';
       ctx.font = '20px Comic Sans MS';
       ctx.textAlign = 'center';
-      ctx.fillText('Drag & Drop to shoot the ball', this.props.width / 2, this.props.height / 2);
+      ctx.fillText('Click, move & release to shoot the ball', this.props.width / 2, this.props.height / 2);
     }
 
     this.balls.forEach(ball => {
