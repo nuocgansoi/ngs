@@ -12,10 +12,10 @@ function HungBong() {
   return (
     <div>
       <div>
-
+        {`Phím di chuyển: A D || <- ->`}
       </div>
 
-      <Unity unityProvider={unityProvider} style={{ width: "100%" }}/>
+      <Unity unityProvider={unityProvider} style={{ width: "100%" }} />
     </div>
   );
 }
