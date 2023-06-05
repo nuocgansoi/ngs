@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import {Link} from 'react-router-dom';
 import routes from '../../routes';
 
@@ -35,6 +35,15 @@ export default class extends React.Component {
             <Item to={routes.testing}>
               Testing
             </Item>
+
+            <hr/>
+            <div>
+              <div>Test Unity Games</div>
+
+              <Item to={routes.unity_games.hung_bong}>
+                Hứng bóng
+              </Item>
+            </div>
           </div>
         </div>
       </div>
