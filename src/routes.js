@@ -6,6 +6,7 @@ export default {
   g2048: '/g2048',
   testing: '/testing',
   unity_games: {
-    hung_bong: '/unity_games/hung_bong'
+    hung_bong: '/unity_games/hung_bong',
+    runner: '/unity_games/runner',
   },
 };

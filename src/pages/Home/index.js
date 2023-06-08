@@ -1,8 +1,8 @@
 ﻿import React from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import routes from '../../routes';
 
-const Item = ({to, children, props}) => (
+const Item = ({ to, children, props }) => (
   <div className="item" {...props}>
     <Link to={to} className="link">
       {children}
@@ -36,12 +36,16 @@ export default class extends React.Component {
               Testing
             </Item>
 
-            <hr/>
+            <hr />
             <div>
               <div>Test Unity Games</div>
 
               <Item to={routes.unity_games.hung_bong}>
                 Hứng bóng
+              </Item>
+
+              <Item to={routes.unity_games.runner}>
+                Runner
               </Item>
             </div>
           </div>
