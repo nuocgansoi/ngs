@@ -47,6 +47,10 @@ export default class extends React.Component {
               <Item to={routes.unity_games.runner}>
                 Runner
               </Item>
+
+              <Item to={routes.unity_games.ban_ruoi}>
+                Bắn ruồi
+              </Item>
             </div>
           </div>
         </div>

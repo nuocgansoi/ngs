@@ -8,5 +8,6 @@ export default {
   unity_games: {
     hung_bong: '/unity_games/hung_bong',
     runner: '/unity_games/runner',
+    ban_ruoi: '/unity_games/ban_ruoi',
   },
 };
