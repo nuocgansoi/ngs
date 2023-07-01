@@ -51,6 +51,10 @@ export default class extends React.Component {
               <Item to={routes.unity_games.ban_ruoi}>
                 Bắn ruồi
               </Item>
+
+              <Item to={routes.unity_games.ban_chim}>
+                Bắn Chim
+              </Item>
             </div>
           </div>
         </div>

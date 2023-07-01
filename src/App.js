@@ -6,6 +6,7 @@ import Testing from './pages/Testing';
 import HungBong from './unity_games/hung_bong';
 import Runner from './unity_games/runner';
 import BanRuoi from './unity_games/ban_ruoi';
+import BanChim from './unity_games/ban_chim';
 import routes from './routes';
 import './scss/App.scss';
 
@@ -13,7 +14,7 @@ class App extends Component {
   render() {
     return (
       <Router>
-        <div id="rootWrapper">
+        <div id="rootWrapper" className="container">
           <Navbar />
           <div id="main">
             <Switch>
@@ -27,6 +28,7 @@ class App extends Component {
               <Route exact path={routes.unity_games.hung_bong} component={loadable(HungBong)} />
               <Route exact path={routes.unity_games.runner} component={loadable(Runner)} />
               <Route exact path={routes.unity_games.ban_ruoi} component={loadable(BanRuoi)} />
+              <Route exact path={routes.unity_games.ban_chim} component={loadable(BanChim)} />
 
               <Redirect to={routes.home} />
             </Switch>
