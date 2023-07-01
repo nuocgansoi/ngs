@@ -1,13 +1,13 @@
 import React from "react";
-import { Unity, useUnityContext } from "react-unity-webgl";
+import UnityWrapper from "../../components/UnityWrapper";
 
 function HungBong() {
-  const { unityProvider } = useUnityContext({
+  const unityContext = {
     loaderUrl: "/unity_games/test_2D_hung_bong/Build/v2.loader.js",
     dataUrl: "/unity_games/test_2D_hung_bong/Build/v2.data",
     frameworkUrl: "/unity_games/test_2D_hung_bong/Build/v2.framework.js",
     codeUrl: "/unity_games/test_2D_hung_bong/Build/v2.wasm",
-  });
+  };
 
   return (
     <div>
@@ -15,7 +15,7 @@ function HungBong() {
         {`Phím di chuyển: A D || <- ->`}
       </div>
 
-      <Unity unityProvider={unityProvider} style={{ width: "100%" }} />
+      <UnityWrapper unityContext={unityContext}/>
     </div>
   );
 }

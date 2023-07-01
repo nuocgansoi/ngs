@@ -1,14 +1,13 @@
 import React from "react";
-import { useUnityContext } from "react-unity-webgl";
 import UnityWrapper from "../../components/UnityWrapper";
 
 function BanChim() {
-  const { unityProvider } = useUnityContext({
+  const unityContext = {
     loaderUrl: "/unity_games/ban_chim/Build/v1.loader.js",
     dataUrl: "/unity_games/ban_chim/Build/v1.data",
     frameworkUrl: "/unity_games/ban_chim/Build/v1.framework.js",
     codeUrl: "/unity_games/ban_chim/Build/v1.wasm",
-  });
+  };
 
   return (
     <div>
@@ -16,7 +15,7 @@ function BanChim() {
       <div>
         {`Phím bắn: Chuột trái`}
       </div>
-      <UnityWrapper unityProvider={unityProvider} />
+      <UnityWrapper unityContext={unityContext} />
     </div>
   )
 }
