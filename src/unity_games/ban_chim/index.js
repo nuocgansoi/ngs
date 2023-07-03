@@ -3,10 +3,10 @@ import UnityWrapper from "../../components/UnityWrapper";
 
 function BanChim() {
   const unityContext = {
-    loaderUrl: "/unity_games/ban_chim/Build/v1.loader.js",
-    dataUrl: "/unity_games/ban_chim/Build/v1.data",
-    frameworkUrl: "/unity_games/ban_chim/Build/v1.framework.js",
-    codeUrl: "/unity_games/ban_chim/Build/v1.wasm",
+    loaderUrl: "/unity_games/ban_chim/Build/v1.1.loader.js",
+    dataUrl: "/unity_games/ban_chim/Build/v1.1.data",
+    frameworkUrl: "/unity_games/ban_chim/Build/v1.1.framework.js",
+    codeUrl: "/unity_games/ban_chim/Build/v1.1.wasm",
   };
 
   return (
