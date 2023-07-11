@@ -40,8 +40,12 @@ export default class extends React.Component {
             <div>
               <div>Test Unity Games</div>
 
-              <Item to={routes.unity_games.hung_bong}>
-                Hứng bóng
+              <Item to={routes.unity_games.ball_breaker}>
+                Ball Breaker
+              </Item>
+
+              <Item to={routes.unity_games.ban_chim}>
+                Bắn Chim
               </Item>
 
               <Item to={routes.unity_games.runner}>
@@ -52,8 +56,8 @@ export default class extends React.Component {
                 Bắn ruồi
               </Item>
 
-              <Item to={routes.unity_games.ban_chim}>
-                Bắn Chim
+              <Item to={routes.unity_games.hung_bong}>
+                Hứng bóng
               </Item>
             </div>
           </div>

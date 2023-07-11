@@ -10,5 +10,6 @@ export default {
     runner: '/unity_games/runner',
     ban_ruoi: '/unity_games/ban_ruoi',
     ban_chim: '/unity_games/ban_chim',
+    ball_breaker: '/unity_games/ball_breaker',
   },
 };
