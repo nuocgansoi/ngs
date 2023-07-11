@@ -5,6 +5,7 @@ const UnityWrapper = ({ unityContext, portrait }) => {
     let width = "100%";
     let paddingBottom = "56.5%";
     if (portrait) {
+        document.getElementById("rootWrapper").classList.add("maxWidth500")
         width = "80%";
         paddingBottom = "142.22%";
     }

@@ -5,6 +5,10 @@
   @include boxShadow(0 1px 1px 1px rgba($black, .2));
 }
 
+.maxWidth500 {
+  max-width: 500px !important;
+}
+
 #navbar {
   @include boxShadow(0 1px 1px 1px rgba($black, .2));
   position: sticky;
