@@ -8,6 +8,7 @@ import Runner from './unity_games/runner';
 import BanRuoi from './unity_games/ban_ruoi';
 import BanChim from './unity_games/ban_chim';
 import BallBreaker from './unity_games/ball_breaker';
+import ArcherShootsApples from './unity_games/archer_shoots_apples';
 import routes from './routes';
 import './scss/App.scss';
 
@@ -31,6 +32,7 @@ class App extends Component {
               <Route exact path={routes.unity_games.ban_ruoi} component={loadable(BanRuoi)} />
               <Route exact path={routes.unity_games.ban_chim} component={loadable(BanChim)} />
               <Route exact path={routes.unity_games.ball_breaker} component={loadable(BallBreaker)} />
+              <Route exact path={routes.unity_games.archer_shoots_apples} component={loadable(ArcherShootsApples)} />
 
               <Redirect to={routes.home} />
             </Switch>

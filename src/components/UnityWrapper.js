@@ -20,6 +20,7 @@ const UnityWrapper = ({ unityContext, portrait }) => {
             <p>Cứ từ từ, đang tải trò chơi... {Math.round(loadingProgression * 100)}%</p>
             <div className="mb-1">
                 <button onClick={enterFullscreen}>Toàn màn hình</button>
+                {!portrait && <div>Xoay ngang màn hình ra nha.</div> }
             </div>
 
             <div style={{ position: "relative", margin: "0 auto", width, height: 0, paddingBottom }}>
