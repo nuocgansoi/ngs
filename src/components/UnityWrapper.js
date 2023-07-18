@@ -5,7 +5,6 @@ const UnityWrapper = ({ unityContext, portrait }) => {
     let width = "100%";
     let paddingBottom = "56.5%";
     if (portrait) {
-        document.getElementById("rootWrapper").classList.add("maxWidth500")
         width = "80%";
         paddingBottom = "142.22%";
     }
@@ -23,9 +22,11 @@ const UnityWrapper = ({ unityContext, portrait }) => {
                 {!portrait && <div>Xoay ngang màn hình ra nha.</div> }
             </div>
 
-            <div style={{ position: "relative", margin: "0 auto", width, height: 0, paddingBottom }}>
-                <div style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0 }}>
-                    <Unity unityProvider={unityProvider} style={{ width: "100%", height: "100%" }} />
+            <div className={portrait ? 'maxWidth500 m-auto' : ''}>
+                <div style={{ position: "relative", margin: "0 auto", width, height: 0, paddingBottom }}>
+                    <div style={{ position: "absolute", top: 0, bottom: 0, left: 0, right: 0 }}>
+                        <Unity unityProvider={unityProvider} style={{ width: "100%", height: "100%" }} />
+                    </div>
                 </div>
             </div>
         </div>
