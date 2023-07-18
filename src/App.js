@@ -20,6 +20,7 @@ class App extends Component {
           <Navbar />
           <div id="main">
             <Switch>
+              <Redirect from='/:url*(/+)' to={window.location.pathname.slice(0, -1)} />
               <Route exact path={routes.home} component={loadable(Home)} />
               <Route exact path={routes.snake} component={loadable(Snake)} />
               <Route exact path={routes.tetris} component={loadable(Tetris)} />
