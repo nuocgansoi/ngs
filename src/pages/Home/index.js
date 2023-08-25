@@ -40,6 +40,10 @@ export default class extends React.Component {
             <div>
               <div>Test Unity Games</div>
 
+              <Item to={routes.unity_games.tower_defense}>
+                Tower Defense
+              </Item>
+
               <Item to={routes.unity_games.archer_shoots_apples}>
                 Archer Shoots Apples
               </Item>

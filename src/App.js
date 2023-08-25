@@ -11,6 +11,7 @@ import BallBreaker from './unity_games/ball_breaker';
 import ArcherShootsApples from './unity_games/archer_shoots_apples';
 import routes from './routes';
 import './scss/App.scss';
+import TowerDefense from './unity_games/tower_defense';
 
 class App extends Component {
   render() {
@@ -34,6 +35,7 @@ class App extends Component {
               <Route exact path={routes.unity_games.ban_chim} component={loadable(BanChim)} />
               <Route exact path={routes.unity_games.ball_breaker} component={loadable(BallBreaker)} />
               <Route exact path={routes.unity_games.archer_shoots_apples} component={loadable(ArcherShootsApples)} />
+              <Route exact path={routes.unity_games.tower_defense} component={loadable(TowerDefense)} />
 
               <Redirect to={routes.home} />
             </Switch>

@@ -12,5 +12,6 @@ export default {
     ban_chim: '/unity_games/ban_chim',
     ball_breaker: '/unity_games/ball_breaker',
     archer_shoots_apples: '/unity_games/archer_shoots_apples',
+    tower_defense: '/unity_games/tower_defense',
   },
 };
